@@ -33,7 +33,8 @@ define( [
 				stroke: "black",
 				strokeWidth: 3
 			}
-		};
+		},
+		regId = new RegExp( "\\bui-id-([\\w-]+)\\b" );
 
 	$.widget( "mobile.routemap", $.mobile.widget, {
 		options: {
@@ -76,6 +77,20 @@ define( [
 			if ( document.readyState === "complete" ) {
 				self.refresh( true );
 			}
+
+			svgContainer.on( "click", function ( event ) {
+				var target = event.target,
+					targetId,
+					tagName = target.tagName;
+
+				if ( tagName === "circle" || tagName === "path" ) {
+					targetId = regId.exec( target.getAttribute( "class" ) );
+
+					if ( targetId ) {
+						$( target ).trigger( "select", targetId[1] );
+					}
+				}
+			});
 		},
 
 		_setOption: function ( key, value ) {
