@@ -28,7 +28,7 @@
 		$( document ).on( "routemapcreate", function ( e ) {
 			widget = $( "#routemapTest" );
 
-			$("#routemapTest").on( "select", function( e, id ) {
+			widget.on( "select", function( e, id ) {
 				var path, target = e.target;
 
 				if ( target.classList.contains( "ui-station" ) ) {
