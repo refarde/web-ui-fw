@@ -10,13 +10,15 @@
 	<link rel="stylesheet" href="../../../jqm/demos/_assets/css/jqm-demos.css">
 	<style>
 		.ui-station-selected {
-			stroke: #909;
-			stroke-width: 10;
-			fill: #f6f;
+			stroke: red;
+			stroke-width: 6;
+		}
+		.ui-station-text-selected {
+			font-size: 1.5em;
 		}
 
 		.ui-line-selected {
-			stroke-width: 10;
+			stroke-width: 8;
 		}
 	</style>
 	<script src="../../../jqm/js/jquery.js"></script>
@@ -29,14 +31,21 @@
 			widget = $( "#routemapTest" );
 
 			widget.on( "select", function( e, id ) {
-				var path, target = e.target;
+				var path, name, target = e.target;
+				name = widget.routemap( "getNameById", id );
 
 				if ( target.classList.contains( "ui-station" ) ) {
 					widget.find( ".ui-station" ).each( function () {
 						this.classList.remove( "ui-station-selected" );
 					} );
-
 					target.classList.add( "ui-station-selected" );
+
+					widget.find( ".ui-station-text" ).each( function () {
+						this.classList.remove( "ui-station-text-selected");
+						if ( $( this ).text() === name ) {
+							this.classList.add( "ui-station-text-selected");
+						}
+					} );
 				} else if ( target.classList.contains( "ui-line" ) ) {
 					widget.find( ".ui-line" ).each( function () {
 						this.classList.remove( "ui-line-selected" );
@@ -66,7 +75,7 @@
 					<div id="routemapTest"
 						data-role="routemap"
 						data-db="routemap_data.json"
-						data-unit="50">
+						data-unit="60">
 					</div>
 				</div>
 			</div>

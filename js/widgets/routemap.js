@@ -19,14 +19,15 @@ define( [
 			exchangeRadius: 6,
 			exchangeStyle: {
 				fill: "white",
-				stroke: "gray",
+				stroke: "red",
 				strokeWidth: 2
 			},
 			stationRadius: 4,
 			stationStyle: {
 				fill: "white",
 				stroke: "black",
-				strokeWidth: 1
+				strokeWidth: 1,
+				r:6
 			},
 			lineStyle: {
 				fill: "none",
@@ -396,8 +397,11 @@ define( [
 			texts = value.split( "\n" );
 
 			for ( i = 0; i < texts.length; i += 1 ) {
-				this._node( node, "tspan", { x: "0",  y: ( settings.fontSize * i ) }, {} )
-					.appendChild( node.ownerDocument.createTextNode( texts[i] ) );
+				this._node( node, "tspan", {
+					"class": "ui-station-text",
+					x: "0",
+					y: ( settings.fontSize * i )
+				}, {} ).appendChild( node.ownerDocument.createTextNode( texts[i] ) );
 			}
 
 			return node;
