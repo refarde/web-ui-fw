@@ -78,13 +78,7 @@
 			[
 				{ "id": "47", "coordinates": [ 5, 4 ], "label": "station44(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "48", "coordinates": [ 5, 3 ], "label": "station5(ex)", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "49", "coordinates": [ 5, 1 ], "label": "station47", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "44", "coordinates": [ 5, 4 ], "label": "station44(ex)", "labelPosition": "ne", "labelAngle": 45 }
-			],
-			[
-				{ "id": "45", "coordinates": [ 5, 4 ], "label": "station44(ex)", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "46", "coordinates": [ 5, 3 ], "label": "station5(ex)", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "47", "coordinates": [ 5, 1 ], "label": "station47", "labelPosition": "ne", "labelAngle": 45 }
+				{ "id": "49", "coordinates": [ 5, 1 ], "label": "station47", "labelPosition": "ne", "labelAngle": 45 }
 			]
 		]
 	}]
