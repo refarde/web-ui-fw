@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="../../../jqm/css/themes/default/jquery.mobile.css" />
 	<link rel="stylesheet" href="../../../css/themes/default/web-ui-fw.css" />
 	<link rel="stylesheet" href="../../../jqm/demos/_assets/css/jqm-demos.css">
+
 	<style>
 		.ui-station-selected {
 			stroke: red;
@@ -32,13 +33,10 @@
 			widget.on( "select", function( e, id ) {
 				var target = e.target;
 				if ( id === undefined ) {
-					removeClasses( "ui-station-selected" );
-					removeClasses( "ui-station-text-selected" );
-					removeClasses( "ui-line-selected" );					
+					unselect( "ui-station-selected", "ui-station-text-selected", "ui-line-selected" );
 				} else if ( target.classList.contains( "ui-station" ) ) {
 					var	name = widget.routemap( "getNameById", id );
-					removeClasses( "ui-station-selected" );
-					removeClasses( "ui-station-text-selected" );
+					unselect( "ui-station-selected", "ui-station-text-selected" );
 					target.classList.add( "ui-station-selected" );
 					widget.find( ".ui-station-text" ).each( function () {
 						if ( $( this ).text() === name ) {
@@ -46,17 +44,38 @@
 						}
 					} );
 				} else if ( target.classList.contains( "ui-line" ) ) {
-					removeClasses( "ui-line-selected" );
+					unselect( "ui-line-selected" );
 					widget.find( ".ui-id-" + id ).each( function () {
 						this.classList.add( "ui-line-selected" );
 					} );
 				}
 			});
 
-			function removeClasses( className ){
-				widget.find ( "."+ className ).each ( function () {
-					this.classList.remove( className );
-				})
+			$( "#shortestWay" ).on( "click", function () {
+				var startId = widget.routemap( "getIdByName", "station21" ),
+					endId = widget.routemap( "getIdByName", "station36" ),
+					path;
+
+				unselect( "ui-station-selected", "ui-station-text-selected", "ui-line-selected" );
+				path = widget.routemap( "shortestRoute", startId, endId );
+
+				widget.routemap( "highlight", path );
+			});
+
+			$( "#clearWay" ).on( "click", function () {
+				widget.routemap( "dishighlight" );
+			});
+
+			function unselect( ) {
+				var i, classes = arguments;
+				if ( !classes || classes.length === 0 ) {
+					return false;
+				}
+				for ( i = 0; i < classes.length; i++ ){
+					widget.find ( "."+ classes[i] ).each ( function () {
+						this.classList.remove( classes[i] );
+					})
+				}
 			}
 		});
 	</script>
@@ -71,7 +90,6 @@
 		</div> <!--/header -->
 		<div data-role="content">
 			<div class="content-primary">
-
 				<h3>Routemap</h3>
 				<div data-demo-html="true" data-demo-js="true">
 					<div id="routemapTest"
@@ -79,9 +97,15 @@
 						data-db="routemap_data.json"
 						data-unit="60">
 					</div>
+					<div data-role="fieldcontain" id="languagueSelection">
+						<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+							<legend>Shortest way:</legend>
+							<button id="shortestWay">station21 > station36</button>
+							<button id="clearWay">Clear</button>
+						</fieldset>
+					</div>
 				</div>
 			</div>
-
 		</div> <!--/content -->
 	</div>
 </body>

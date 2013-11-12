@@ -29,7 +29,7 @@
 		"name": "Line 2",
 		"style": {
 			"line" : { "stroke": "red" },
-			"station": { "stroke": "rgb(95, 178, 33)" }
+			"station": { "stroke": "rgb(85, 85, 85)" }
 		},
 		"branches": [
 			[
@@ -47,7 +47,7 @@
 		"name": "Line 3",
 		"style": {
 			"line" : { "stroke": "green" },
-			"station": { "stroke": "rgb(50, 250, 150)" }
+			"station": { "stroke": "rgb(85, 85, 85)" }
 		},
 		"branches": [
 			[
@@ -64,7 +64,7 @@
 		"name": "Line 4",
 		"style": {
 			"line" : { "stroke": "orange" },
-			"station": { "stroke": "rgb(50, 250, 150)" }
+			"station": { "stroke": "rgb(85, 85, 85)" }
 		},
 		"branches": [
 			[

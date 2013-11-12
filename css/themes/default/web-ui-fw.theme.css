@@ -60,3 +60,8 @@
 	width: 70px;
 	height: 70px;
 }
+.ui-highlight {
+	stroke: blue;
+	fill: red;
+	stroke-width: 6;
+}
