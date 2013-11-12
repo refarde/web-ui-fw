@@ -16,7 +16,6 @@
 		.ui-station-text-selected {
 			font-size: 1.5em;
 		}
-
 		.ui-line-selected {
 			stroke-width: 8;
 		}
@@ -31,31 +30,34 @@
 			widget = $( "#routemapTest" );
 
 			widget.on( "select", function( e, id ) {
-				var path, name, target = e.target;
-				name = widget.routemap( "getNameById", id );
-
-				if ( target.classList.contains( "ui-station" ) ) {
-					widget.find( ".ui-station" ).each( function () {
-						this.classList.remove( "ui-station-selected" );
-					} );
+				var target = e.target;
+				if ( id === undefined ) {
+					removeClasses( "ui-station-selected" );
+					removeClasses( "ui-station-text-selected" );
+					removeClasses( "ui-line-selected" );					
+				} else if ( target.classList.contains( "ui-station" ) ) {
+					var	name = widget.routemap( "getNameById", id );
+					removeClasses( "ui-station-selected" );
+					removeClasses( "ui-station-text-selected" );
 					target.classList.add( "ui-station-selected" );
-
 					widget.find( ".ui-station-text" ).each( function () {
-						this.classList.remove( "ui-station-text-selected");
 						if ( $( this ).text() === name ) {
 							this.classList.add( "ui-station-text-selected");
 						}
 					} );
 				} else if ( target.classList.contains( "ui-line" ) ) {
-					widget.find( ".ui-line" ).each( function () {
-						this.classList.remove( "ui-line-selected" );
-					} );
-
+					removeClasses( "ui-line-selected" );
 					widget.find( ".ui-id-" + id ).each( function () {
 						this.classList.add( "ui-line-selected" );
 					} );
 				}
 			});
+
+			function removeClasses( className ){
+				widget.find ( "."+ className ).each ( function () {
+					this.classList.remove( className );
+				})
+			}
 		});
 	</script>
 
@@ -79,6 +81,7 @@
 					</div>
 				</div>
 			</div>
+
 		</div> <!--/content -->
 	</div>
 </body>

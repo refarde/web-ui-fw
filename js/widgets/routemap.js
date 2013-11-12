@@ -86,10 +86,11 @@ define( [
 
 				if ( tagName === "circle" || tagName === "path" ) {
 					targetId = regId.exec( target.getAttribute( "class" ) );
-
 					if ( targetId ) {
 						$( target ).trigger( "select", targetId[1] );
 					}
+				} else {
+					$( target ).trigger( "select" );
 				}
 			});
 		},
