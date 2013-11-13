@@ -62,7 +62,7 @@
 				var startId = widget.routemap( "getIdsByName", "station21" ),
 					endId = widget.routemap( "getIdsByName", "station7(ex)" ),
 					path;
-				console.log(endId);
+				widget.routemap( "dishighlight" );
 				path = widget.routemap( "minimumTransfers", startId[0], endId[0] );
 				alert( path );
 				widget.routemap( "highlight", path );
