@@ -20,7 +20,7 @@
 				{ "id": "4", "coordinates": [ 4, 2 ], "label": "station4(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "5", "coordinates": [ 5, 3 ], "label": "station5(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "6", "coordinates": [ 6, 3 ], "label": "station6", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "7", "coordinates": [ 7, 3 ], "label": "station7", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "7", "coordinates": [ 7, 3 ], "label": "station7(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "8", "coordinates": [ 8, 4 ], "label": "station8(ex)", "labelPosition": "ne", "labelAngle": 45 }
 			]
 		]
@@ -38,8 +38,10 @@
 				{ "id": "23", "coordinates": [ 2, 3 ], "label": "station23", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "24", "coordinates": [ 2, 4 ], "label": "station24(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "25", "coordinates": [ 3, 6 ], "label": "station25", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "26", "coordinates": [ 7, 6 ], "label": "station26", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "27", "coordinates": [ 9, 5 ], "label": "station27", "labelPosition": "ne", "labelAngle": 45 }
+				{ "id": "26", "coordinates": [ 5, 6 ], "label": "station26", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "27", "coordinates": [ 7, 5 ], "label": "station27", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "28", "coordinates": [ 7, 3 ], "label": "station7(ex)", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "29", "coordinates": [ 6, 1 ], "label": "station29", "labelPosition": "ne", "labelAngle": 45 }
 			]
 		]
 	}, {
@@ -73,7 +75,7 @@
 				{ "id": "43", "coordinates": [ 3, 4 ], "label": "station33(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "44", "coordinates": [ 5, 4 ], "label": "station44(ex)", "labelPosition": "ne", "labelAngle": 45 },
 				{ "id": "45", "coordinates": [ 6, 4 ], "label": "station45", "labelPosition": "ne", "labelAngle": 45 },
-				{ "id": "46", "coordinates": [ 9, 3 ], "label": "station46", "labelPosition": "ne", "labelAngle": 45 }
+				{ "id": "46", "coordinates": [ 7, 3 ], "label": "station7(ex)", "labelPosition": "ne", "labelAngle": 45 }
 			],
 			[
 				{ "id": "47", "coordinates": [ 5, 4 ], "label": "station44(ex)", "labelPosition": "ne", "labelAngle": 45 },

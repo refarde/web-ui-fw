@@ -3,12 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
 	<title>Routemap Demo - Web UI Framework Demos</title>
 	<link rel="stylesheet" href="../../../jqm/css/themes/default/jquery.mobile.css" />
 	<link rel="stylesheet" href="../../../css/themes/default/web-ui-fw.css" />
 	<link rel="stylesheet" href="../../../jqm/demos/_assets/css/jqm-demos.css">
-
 	<style>
 		.ui-station-selected {
 			stroke: red;
@@ -25,11 +23,9 @@
 	<script src="../../../jqm/js/"></script>
 	<script src="../../../js/"></script>
 	<script src="../../_assets/js/"></script>
-
 	<script>
 		$( document ).on( "routemapcreate", function ( e ) {
 			widget = $( "#routemapTest" );
-
 			widget.on( "select", function( e, id ) {
 				var target = e.target;
 				if ( id === undefined ) {
@@ -52,18 +48,46 @@
 			});
 
 			$( "#shortestWay" ).on( "click", function () {
-				var startId = widget.routemap( "getIdByName", "station21" ),
-					endId = widget.routemap( "getIdByName", "station36" ),
+				var startId = widget.routemap( "getIdsByName", "station21" ),
+					endId = widget.routemap( "getIdsByName", "station7(ex)" ),
 					path;
 
 				unselect( "ui-station-selected", "ui-station-text-selected", "ui-line-selected" );
-				path = widget.routemap( "shortestRoute", startId, endId );
+				path = widget.routemap( "shortestRoute", startId[0], endId[0] );
+				alert( path );
+				widget.routemap( "highlight", path );
+			});
 
+			$( "#minimumTransfers" ).on( "click", function () {
+				var startId = widget.routemap( "getIdsByName", "station21" ),
+					endId = widget.routemap( "getIdsByName", "station7(ex)" ),
+					path;
+				console.log(endId);
+				path = widget.routemap( "minimumTransfers", startId[0], endId[0] );
+				alert( path );
 				widget.routemap( "highlight", path );
 			});
 
 			$( "#clearWay" ).on( "click", function () {
 				widget.routemap( "dishighlight" );
+			});
+
+			$( "#getIdsByName" ).on( "click", function () {
+				alert( widget.routemap( "getIdsByName", "station5(ex)" ) );
+			});
+
+			$( "#getNameById" ).on( "click", function () {
+				alert( widget.routemap( "getNameById", "5" ) );
+			});
+
+			$( "#highlight" ).on( "click", function () {
+				var path = ["3", "4", "33", "44", "45" ];
+				widget.routemap( "highlight", path );
+			});
+
+			$( "#dishighlight" ).on( "click", function () {
+				var path = ["3", "4", "33", "44", "45" ];
+				widget.routemap( "dishighlight", path );
 			});
 
 			function unselect( ) {
@@ -97,12 +121,14 @@
 						data-db="routemap_data.json"
 						data-unit="60">
 					</div>
-					<div data-role="fieldcontain" id="languagueSelection">
-						<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
-							<legend>Shortest way:</legend>
-							<button id="shortestWay">station21 > station36</button>
-							<button id="clearWay">Clear</button>
-						</fieldset>
+					<div>
+						<button id="shortestWay">shortestWay : station21 > station7</button>
+						<button id="minimumTransfers">minimumTransfers : station21 > station7</button>
+						<button id="clearWay">Clear</button>
+						<button id="getIdsByName">getIdsByName : "station5(ex)"</button>
+						<button id="getNameById">getNameById : "5"</button>
+						<button id="highlight">highlight : station3 > station45 </button>
+						<button id="dishighlight">dishighlight : station3 > station45 </button>
 					</div>
 				</div>
 			</div>
