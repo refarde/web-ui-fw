@@ -291,6 +291,32 @@ define( [
 			}
 		},
 
+		_drawLegend: function () {
+			var i, lines = this._lines,
+				length = lines.length,
+				lineId,
+				group = this._node( null, "g", { "class": "ui-legend"} );
+
+			for ( i = 0; i < length; i += 1 ) {
+				if ( lineId !== lines[i].id ) {
+					lineId = lines[i].id;
+					this._node( group, "line", {
+						"class": "ui-legend-line ui-id-" + lineId,
+						x1: 0,
+						y1: 10 + (i * 15),
+						x2: 20,
+						y2: 10 + (i * 15)
+					}, lines[i].style );
+
+					this._node( group, "text", {
+						"class": "ui-legend-text ui-id-" + lineId,
+						x : 25,
+						y : 13 + (i * 15)
+					}, { fontSize: DEFAULT_STYLE.font.fontSize || "0.75rem"} ).appendChild( group.ownerDocument.createTextNode( lineId ) );
+				}
+			}
+		},
+
 		_drawElements: function () {
 			var i,
 				options = this.options,
@@ -601,6 +627,7 @@ define( [
 				this._clear();
 				this._drawLines();
 				this._drawElements();
+				this._drawLegend();
 			}
 		}
 	} );
