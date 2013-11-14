@@ -6,19 +6,8 @@
 	<title>Routemap Demo - Web UI Framework Demos</title>
 	<link rel="stylesheet" href="../../../jqm/css/themes/default/jquery.mobile.css" />
 	<link rel="stylesheet" href="../../../css/themes/default/web-ui-fw.css" />
+
 	<link rel="stylesheet" href="../../../jqm/demos/_assets/css/jqm-demos.css">
-	<style>
-		.ui-station-selected {
-			stroke: red;
-			stroke-width: 6;
-		}
-		.ui-station-text-selected {
-			font-size: 1.5em;
-		}
-		.ui-line-selected {
-			stroke-width: 8;
-		}
-	</style>
 	<script src="../../../jqm/js/jquery.js"></script>
 	<script src="../../../jqm/js/"></script>
 	<script src="../../../js/"></script>
@@ -28,43 +17,32 @@
 			widget = $( "#routemapTest" );
 			widget.on( "select", function( e, id ) {
 				var target = e.target;
-				if ( id === undefined ) {
-					unselect( "ui-station-selected", "ui-station-text-selected", "ui-line-selected" );
+				widget.routemap( "dishighlight" );
+
+				if ( !id ) {
+					return false;
 				} else if ( target.classList.contains( "ui-station" ) ) {
-					var	name = widget.routemap( "getNameById", id );
-					unselect( "ui-station-selected", "ui-station-text-selected" );
-					target.classList.add( "ui-station-selected" );
-					widget.find( ".ui-station-text" ).each( function () {
-						if ( $( this ).text() === name ) {
-							this.classList.add( "ui-station-text-selected");
-						}
-					} );
+					widget.routemap( "highlight", [id] );
 				} else if ( target.classList.contains( "ui-line" ) ) {
-					unselect( "ui-line-selected" );
-					widget.find( ".ui-id-" + id ).each( function () {
-						this.classList.add( "ui-line-selected" );
-					} );
+					widget.routemap( "highlight", [id] );
 				}
 			});
+			
+			/* for button demo */
+
+			var startId = widget.routemap( "getIdsByName", "station21" ),
+				endId = widget.routemap( "getIdsByName", "station7(ex)" ),
+				path;
 
 			$( "#shortestWay" ).on( "click", function () {
-				var startId = widget.routemap( "getIdsByName", "station21" ),
-					endId = widget.routemap( "getIdsByName", "station7(ex)" ),
-					path;
-
-				unselect( "ui-station-selected", "ui-station-text-selected", "ui-line-selected" );
 				path = widget.routemap( "shortestRoute", startId[0], endId[0] );
-				alert( path );
+				widget.routemap( "dishighlight" );
 				widget.routemap( "highlight", path );
 			});
 
 			$( "#minimumTransfers" ).on( "click", function () {
-				var startId = widget.routemap( "getIdsByName", "station21" ),
-					endId = widget.routemap( "getIdsByName", "station7(ex)" ),
-					path;
+				path = widget.routemap( "minimumTransfers", startId[0], endId[1] );
 				widget.routemap( "dishighlight" );
-				path = widget.routemap( "minimumTransfers", startId[0], endId[0] );
-				alert( path );
 				widget.routemap( "highlight", path );
 			});
 
@@ -89,18 +67,6 @@
 				var path = ["3", "4", "33", "44", "45" ];
 				widget.routemap( "dishighlight", path );
 			});
-
-			function unselect( ) {
-				var i, classes = arguments;
-				if ( !classes || classes.length === 0 ) {
-					return false;
-				}
-				for ( i = 0; i < classes.length; i++ ){
-					widget.find ( "."+ classes[i] ).each ( function () {
-						this.classList.remove( classes[i] );
-					})
-				}
-			}
 		});
 	</script>
 

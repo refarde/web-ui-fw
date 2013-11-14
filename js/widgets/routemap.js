@@ -79,12 +79,12 @@ define( [
 				self.refresh( true );
 			}
 
-			svgContainer.on( "click", function ( event ) {
+			svgContainer.on( "mouseover", function ( event ) {
 				var target = event.target,
 					targetId,
 					tagName = target.tagName;
 
-				if ( tagName === "circle" || tagName === "path" ) {
+				if ( tagName === "circle" || tagName === "path" || tagName === "tspan" ) {
 					targetId = regId.exec( target.getAttribute( "class" ) );
 					if ( targetId ) {
 						$( target ).trigger( "select", targetId[1] );
@@ -301,7 +301,7 @@ define( [
 				if ( lineId !== lines[i].id ) {
 					lineId = lines[i].id;
 					this._node( group, "line", {
-						"class": "ui-legend-line ui-id-" + lineId,
+						"class": "ui-line ui-id-" + lineId,
 						x1: 0,
 						y1: 10 + (i * 15),
 						x2: 20,
@@ -309,7 +309,7 @@ define( [
 					}, lines[i].style );
 
 					this._node( group, "text", {
-						"class": "ui-legend-text ui-id-" + lineId,
+						"class": "ui-line ui-id-" + lineId,
 						x : 25,
 						y : 13 + (i * 15)
 					}, { fontSize: DEFAULT_STYLE.font.fontSize || "0.75rem"} ).appendChild( group.ownerDocument.createTextNode( lineId ) );
@@ -331,18 +331,20 @@ define( [
 				labelAngle = 0,
 				group,
 				stationName,
-				text;
+				text,
+				className;
 
 			for ( i = 0; i < stations.length; i += 1 ) {
 				station = stations[i];
 				label = station.label;
 				coordinates = station.coordinates;
 				position = [unit * coordinates[0], unit * coordinates[1] ];
-				stationRadius = station.radius;
+				stationRadius = station.radius,
+				className = "ui-station ui-id-" + station.id;
 
 				// draw station
 				this._node( null, "circle", {
-					"class": "ui-station ui-id-" + station.id,
+					"class": className,
 					cx: position[0],
 					cy: position[1],
 					r: stationRadius
@@ -357,7 +359,7 @@ define( [
 					( this._languageData[label] || label ) :
 						label;
 
-				text = this._text( group, stationName || "?", {},
+				text = this._text( group, stationName || "?", { "class": className },
 					{ transform: "rotate(" + labelAngle + ")", fontSize: station.font.fontSize || "9" }
 				);
 
@@ -425,7 +427,6 @@ define( [
 
 			for ( i = 0; i < texts.length; i += 1 ) {
 				this._node( node, "tspan", {
-					"class": "ui-station-text",
 					x: "0",
 					y: ( settings.fontSize * i )
 				}, {} ).appendChild( node.ownerDocument.createTextNode( texts[i] ) );
@@ -570,23 +571,27 @@ define( [
 		},
 
 		highlight: function ( path ) {
-			var i, j, stations, stationList;
+			var i, stations, stationList,
+				self = this;
 
 			if ( !this._svg || !path ) {
 				return;
 			}
-
 			stations = this._stations;
 			stationList = this._stationList;
 
-			for ( i = 0; i < path.length; i++ ) {
-				for ( j = 0; j < stations.length; j += 1 ) {
-					if ( stations[j].label === stationList[path[i]] ) {
-						this._addClassSVG( $( ".ui-id-" + stations[j].id ), "ui-highlight" );
-						break;
+			path.map( function ( id ) {
+				if ( id.indexOf( "line" ) > - 1) {
+					self._addClassSVG( $( ".ui-line.ui-id-" + id ), "ui-highlight" );
+				} else {
+					for ( i = 0; i < stations.length; i += 1 ) {
+						if ( stations[i].label === stationList[id] ) {
+							self._addClassSVG( $( ".ui-station.ui-id-" + stations[i].id ), "ui-highlight" );
+							break;
+						}
 					}
 				}
-			}
+			});
 		},
 
 		dishighlight: function ( path ) {
@@ -600,7 +605,7 @@ define( [
 			}
 
 			if ( !path ) {
-				this._removeClassSVG( $( "circle" ), "ui-highlight" );
+				this._removeClassSVG( $( ".ui-highlight" ), "ui-highlight" );
 				return;
 			}
 

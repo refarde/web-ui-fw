@@ -2,8 +2,7 @@
 	"name": "Example Route Map",
 	"exchangeStyle": {
 		"fill": "white",
-		"stroke": "gray",
-		"r" : 8
+		"stroke": "gray"
 	},
 	"lines": [{
 		"id": "line1",
