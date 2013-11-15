@@ -51,7 +51,7 @@ define( [
 		_lines: [],
 		_stations: [],
 		_stationsMap: [],
-		_stationList: {},
+		_nameList: {},
 		_graph: {},
 
 		_create: function () {
@@ -190,6 +190,8 @@ define( [
 				branches = lines[i].branches;
 				stationStyle = $.extend( {}, DEFAULT_STYLE.stationStyle, lines[i].style.station );
 				lineStyle = $.extend( {}, DEFAULT_STYLE.lineStyle, lines[i].style.line );
+				this._nameList[ lines[i].id ] = lines[i].name;
+
 				for ( j = 0; j < branches.length; j += 1 ) {
 					branch = branches[j];
 					linePath = "";
@@ -221,7 +223,7 @@ define( [
 							this._stationsMap[coord[0]] = [];
 						}
 
-						this._stationList[ station.id ] = station.label;
+						this._nameList[ station.id ] = station.label;
 
 						if ( !this._stationsMap[coord[0]][coord[1]] ) {
 							station.style = stationStyle;
@@ -556,10 +558,10 @@ define( [
 		// Public
 
 		getIdsByName: function ( name ) {
-			var stationList = this._stationList, key, ret = [];
+			var nameList = this._nameList, key, ret = [];
 
-			for ( key in stationList ) {
-				if( stationList[key] === name ) {
+			for ( key in nameList ) {
+				if( nameList[key] === name ) {
 					ret.push( key );
 				}
 			}
@@ -567,7 +569,7 @@ define( [
 		},
 
 		getNameById: function ( id ) {
-			return this._stationList[id];
+			return this._nameList[id];
 		},
 
 		shortestRoute: function ( source, destination ) {
