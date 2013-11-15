@@ -57,9 +57,7 @@ define( [
 		_create: function () {
 			var self = this,
 				view = self.element,
-				svgContainer = $( "<div>" ).appendTo( view );
-
-			svgContainer.addClass( "ui-routemap-container" );
+				svgContainer = $( "<div class='ui-routemap-container'>" ).appendTo( view );
 
 			self._svg = $( document.createElementNS( svgNameSpace, "svg" ) )
 				.attr( {
@@ -79,20 +77,19 @@ define( [
 				self.refresh( true );
 			}
 
-			svgContainer.on( "mouseover", function ( event ) {
-				var target = event.target,
+			svgContainer.on( "click", function ( event ) {
+				var target = $( event.target ),
 					targetId,
-					tagName = target.tagName;
+					classList = target[0].classList;
 
-				if ( tagName === "circle" || tagName === "path" || tagName === "tspan" ) {
-					targetId = regId.exec( target.getAttribute( "class" ) );
-					if ( targetId ) {
-						$( target ).trigger( "select", targetId[1] );
-					}
-				} else {
-					$( target ).trigger( "select" );
+				if ( classList.contains( "ui-shape" ) || classList.contains( "ui-label" ) ) {
+					targetId = regId.exec( target.parent().attr( "class" ) );
+				} else if ( classList.contains( "ui-line" ) ) {
+					targetId = regId.exec( target.attr( "class" ) );
 				}
-			});
+
+				target.trigger( "select", targetId ? targetId[1] : undefined );
+			} );
 		},
 
 		_setOption: function ( key, value ) {
@@ -159,7 +156,7 @@ define( [
 				branches,
 				branch,
 				station,
-				duplicatedStation,
+				exchange,
 				stationStyle,
 				stationRadius = data.stationRadius || DEFAULT_STYLE.stationRadius,
 				stationFont = $.extend( {}, DEFAULT_STYLE.font, data.stationFont ),
@@ -230,17 +227,19 @@ define( [
 							station.style = stationStyle;
 							station.radius = stationRadius;
 							station.font = stationFont;
+							station.transfer = [];
 							this._stationsMap[coord[0]][coord[1]] = station;
 							this._stations.push( station );
-						} else if ( !this._stationsMap[coord[0]][coord[1]].exchange ) {
-							duplicatedStation = this._stationsMap[coord[0]][coord[1]];
-							duplicatedStation.style = exchangeStyle;
-							duplicatedStation.radius = exchangeRadius;
-							duplicatedStation.font = exchangeFont;
-							duplicatedStation.exchange = true;
-
-							graph[station.id][duplicatedStation.id] = "TRANSPER";
-							graph[duplicatedStation.id][station.id] = "TRANSPER";
+						} else {
+							exchange = this._stationsMap[coord[0]][coord[1]];
+							if ( !exchange.transfer.length ) {
+								exchange.style = exchangeStyle;
+								exchange.radius = exchangeRadius;
+								exchange.font = exchangeFont;
+							}
+							exchange.transfer.push( station.id );
+							graph[station.id][exchange.id] = "TRANSPER";
+							graph[exchange.id][station.id] = "TRANSPER";
 						}
 
 						// lines
@@ -324,33 +323,42 @@ define( [
 				stationRadius,
 				stations = this._stations,
 				station,
+				stationGroup,
 				label,
 				coordinates,
 				position,
 				labelPosition = [0, 0],
 				labelAngle = 0,
-				group,
+				textGroup,
 				stationName,
 				text,
-				className;
+				classes;
 
 			for ( i = 0; i < stations.length; i += 1 ) {
 				station = stations[i];
 				label = station.label;
 				coordinates = station.coordinates;
 				position = [unit * coordinates[0], unit * coordinates[1] ];
-				stationRadius = station.radius,
-				className = "ui-station ui-id-" + station.id;
+				stationRadius = station.radius;
+
+				classes = "ui-station ui-id-" + station.id;
+				if ( station.transfer.length ) {
+					classes += " ui-id-" + station.transfer.join( " ui-id-" );
+				}
+
+				stationGroup = this._node( null, "g", {
+					"class": classes
+				} );
 
 				// draw station
-				this._node( null, "circle", {
-					"class": className,
+				this._node( stationGroup, "circle", {
+					"class": "ui-shape",
 					cx: position[0],
 					cy: position[1],
 					r: stationRadius
 				}, station.style );
 
-				group = this._node( null, "g" );
+				textGroup = this._node( stationGroup, "g" );
 
 				labelAngle = ( station.labelAngle ) ? -parseInt( station.labelAngle, 10 ) : 0;
 
@@ -359,7 +367,7 @@ define( [
 					( this._languageData[label] || label ) :
 						label;
 
-				text = this._text( group, stationName || "?", { "class": className },
+				text = this._text( textGroup, stationName || "?", { "class": "ui-label" },
 					{ transform: "rotate(" + labelAngle + ")", fontSize: station.font.fontSize || "9" }
 				);
 
@@ -390,7 +398,7 @@ define( [
 					break;
 				}
 
-				group.setAttribute( "transform", "translate(" + labelPosition[0] + "," + labelPosition[1] + ")" );
+				textGroup.setAttribute( "transform", "translate(" + labelPosition[0] + "," + labelPosition[1] + ")" );
 			}
 		},
 
@@ -469,8 +477,8 @@ define( [
 				costE,
 				costUTotal,
 				costV,
-				first_visit,
 				msg,
+				destCost,
 				nodes = [];
 
 			function PriorityQueue() {
@@ -520,8 +528,7 @@ define( [
 					costUTotal = costU + costE;
 
 					costV = costs[v];
-					first_visit = ( costs[v] === undefined );
-					if ( first_visit || costV > costUTotal ) {
+					if ( costV === undefined  || costV > costUTotal ) {
 						costs[v] = costUTotal;
 						open.push( v, costUTotal );
 						predecessors[v] = u;
@@ -534,6 +541,8 @@ define( [
 				throw new Error( msg );
 			}
 
+			destCost = costs[destination];
+
 			while ( destination ) {
 				nodes.push( destination );
 				destination = predecessors[destination];
@@ -541,7 +550,7 @@ define( [
 
 			nodes.reverse();
 
-			return nodes;
+			return { path: nodes, cost: destCost };
 		},
 
 		// -------------------------------------------------
@@ -563,59 +572,60 @@ define( [
 		},
 
 		shortestRoute: function ( source, destination ) {
-			return this._calculateShortestPath( this._graph, source, destination );
+			return this._calculateShortestPath( this._graph, source, destination ).path;
 		},
 
 		minimumTransfers: function ( source, destination ) {
-			return this._calculateShortestPath( this._graph, source, destination, true );
-		},
+			var i = 0, j = 0, route,
+				result = { cost: 9999 },
+				sources = this.getIdsByName( this.getNameById( source ) ),
+				destinations = this.getIdsByName( this.getNameById( destination ) ),
+				sourcesLength = sources.length,
+				destinationsLength = destinations.length;
 
-		highlight: function ( path ) {
-			var i, stations, stationList,
-				self = this;
-
-			if ( !this._svg || !path ) {
-				return;
-			}
-			stations = this._stations;
-			stationList = this._stationList;
-
-			path.map( function ( id ) {
-				if ( id.indexOf( "line" ) > - 1) {
-					self._addClassSVG( $( ".ui-line.ui-id-" + id ), "ui-highlight" );
-				} else {
-					for ( i = 0; i < stations.length; i += 1 ) {
-						if ( stations[i].label === stationList[id] ) {
-							self._addClassSVG( $( ".ui-station.ui-id-" + stations[i].id ), "ui-highlight" );
-							break;
-						}
+			for ( i = 0; i < sourcesLength; i++ ) {
+				for ( j = 0; j < destinationsLength; j++ ) {
+					route = this._calculateShortestPath( this._graph, sources[i], destinations[j], true );
+					if ( result.cost > route.cost ) {
+						result = route;
 					}
 				}
-			});
+			}
+
+			return result.path;
 		},
 
-		dishighlight: function ( path ) {
-			var i, j,
-				svgDoc = this._svg,
-				stations = this._stations,
-				stationList = this._stationList;
+		highlight: function ( target ) {
+			var i, view, targetLength;
 
-			if ( !svgDoc ) {
+			if ( !this._svg || !target ) {
 				return;
 			}
 
-			if ( !path ) {
-				this._removeClassSVG( $( ".ui-highlight" ), "ui-highlight" );
+			view = this.element;
+			targetLength = target.length;
+
+			for ( i = 0; i < targetLength; i++ ) {
+				this._addClassSVG( view.find( ".ui-id-" + target[i] ), "ui-highlight" );
+			}
+		},
+
+		dishighlight: function ( target ) {
+			var i, view, targetLength;
+
+			if ( !this._svg ) {
 				return;
 			}
 
-			for ( i = 0; i < path.length; i++ ) {
-				for ( j = 0; j < stations.length; j += 1 ) {
-					if ( stations[j].label === stationList[path[i]] ) {
-						this._removeClassSVG( $( ".ui-id-" + stations[j].id ), "ui-highlight" );
-						break;
-					}
-				}
+			view = this.element;
+			if ( !target ) {
+				this._removeClassSVG( view.find( ".ui-station, .ui-line" ), "ui-highlight" );
+				return;
+			}
+
+			targetLength = target.length;
+			for ( i = 0; i < targetLength; i++ ) {
+				this._removeClassSVG( view.find( ".ui-id-" + target[i] ), "ui-highlight" );
 			}
 		},
 

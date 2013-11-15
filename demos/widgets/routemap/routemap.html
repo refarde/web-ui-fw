@@ -16,34 +16,26 @@
 		$( document ).on( "routemapcreate", function ( e ) {
 			widget = $( "#routemapTest" );
 			widget.on( "select", function( e, id ) {
-				var target = e.target;
 				widget.routemap( "dishighlight" );
 
-				if ( !id ) {
-					return false;
-				} else if ( target.classList.contains( "ui-station" ) ) {
-					widget.routemap( "highlight", [id] );
-				} else if ( target.classList.contains( "ui-line" ) ) {
+				if ( id ) {
 					widget.routemap( "highlight", [id] );
 				}
 			});
 			
 			/* for button demo */
-
-			var startId = widget.routemap( "getIdsByName", "station21" ),
-				endId = widget.routemap( "getIdsByName", "station7(ex)" ),
+			var startId = widget.routemap( "getIdsByName", "station21" )[0],
+				endId = widget.routemap( "getIdsByName", "station7(ex)" )[0],
 				path;
 
 			$( "#shortestWay" ).on( "click", function () {
-				path = widget.routemap( "shortestRoute", startId[0], endId[0] );
-				widget.routemap( "dishighlight" );
-				widget.routemap( "highlight", path );
+				path = widget.routemap( "shortestRoute", startId, endId );
+				widget.routemap( "dishighlight" ).routemap( "highlight", path );
 			});
 
 			$( "#minimumTransfers" ).on( "click", function () {
-				path = widget.routemap( "minimumTransfers", startId[0], endId[1] );
-				widget.routemap( "dishighlight" );
-				widget.routemap( "highlight", path );
+				path = widget.routemap( "minimumTransfers", startId, endId );
+				widget.routemap( "dishighlight" ).routemap( "highlight", path );
 			});
 
 			$( "#clearWay" ).on( "click", function () {
@@ -59,13 +51,11 @@
 			});
 
 			$( "#highlight" ).on( "click", function () {
-				var path = ["3", "4", "33", "44", "45" ];
-				widget.routemap( "highlight", path );
+				widget.routemap( "highlight", ["3", "4", "33", "44", "45" ] );
 			});
 
 			$( "#dishighlight" ).on( "click", function () {
-				var path = ["3", "4", "33", "44", "45" ];
-				widget.routemap( "dishighlight", path );
+				widget.routemap( "dishighlight", ["3", "4", "33", "44", "45" ] );
 			});
 		});
 	</script>
