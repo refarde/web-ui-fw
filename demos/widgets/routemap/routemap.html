@@ -28,33 +28,33 @@
 				endId = widget.routemap( "getIdsByName", "station7(ex)" )[0],
 				path;
 
-			$( "#shortestWay" ).on( "click", function () {
+			$( "#shortestWay" ).on( "vclick", function () {
 				path = widget.routemap( "shortestRoute", startId, endId );
 				widget.routemap( "dishighlight" ).routemap( "highlight", path );
 			});
 
-			$( "#minimumTransfers" ).on( "click", function () {
+			$( "#minimumTransfers" ).on( "vclick", function () {
 				path = widget.routemap( "minimumTransfers", startId, endId );
 				widget.routemap( "dishighlight" ).routemap( "highlight", path );
 			});
 
-			$( "#clearWay" ).on( "click", function () {
+			$( "#clearWay" ).on( "vclick", function () {
 				widget.routemap( "dishighlight" );
 			});
 
-			$( "#getIdsByName" ).on( "click", function () {
+			$( "#getIdsByName" ).on( "vclick", function () {
 				alert( widget.routemap( "getIdsByName", "station5(ex)" ) );
 			});
 
-			$( "#getNameById" ).on( "click", function () {
+			$( "#getNameById" ).on( "vclick", function () {
 				alert( widget.routemap( "getNameById", "5" ) );
 			});
 
-			$( "#highlight" ).on( "click", function () {
+			$( "#highlight" ).on( "vclick", function () {
 				widget.routemap( "highlight", ["3", "4", "33", "44", "45" ] );
 			});
 
-			$( "#dishighlight" ).on( "click", function () {
+			$( "#dishighlight" ).on( "vclick", function () {
 				widget.routemap( "dishighlight", ["3", "4", "33", "44", "45" ] );
 			});
 		});

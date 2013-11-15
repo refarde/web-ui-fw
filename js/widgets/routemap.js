@@ -77,8 +77,8 @@ define( [
 				self.refresh( true );
 			}
 
-			svgContainer.on( "click", function ( event ) {
-				var target = $( event.target ),
+			svgContainer.on( "vclick", function ( event ) {
+				var target = event.target,
 					targetId,
 					classList = target[0].classList;
 
@@ -308,7 +308,6 @@ define( [
 					}, lines[i].style );
 
 					this._node( group, "text", {
-						"class": "ui-line ui-id-" + lineId,
 						x : 25,
 						y : 13 + (i * 15)
 					}, { fontSize: DEFAULT_STYLE.font.fontSize || "0.75rem"} ).appendChild( group.ownerDocument.createTextNode( lineId ) );
