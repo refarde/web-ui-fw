@@ -78,7 +78,7 @@ define( [
 			}
 
 			svgContainer.on( "vclick", function ( event ) {
-				var target = event.target,
+				var target = $( event.target ),
 					targetId,
 					classList = target[0].classList;
 
