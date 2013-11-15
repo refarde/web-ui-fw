@@ -21,9 +21,8 @@
 
 				if ( !id ) {
 					return false;
-				} else if ( target.classList.contains( "ui-station" ) ) {
-					widget.routemap( "highlight", [id] );
-				} else if ( target.classList.contains( "ui-line" ) ) {
+				}
+				if ( target.classList.contains( "ui-station" ) || target.classList.contains( "ui-line" ) ) {
 					widget.routemap( "highlight", [id] );
 				}
 			});
@@ -34,37 +33,37 @@
 				endId = widget.routemap( "getIdsByName", "station7(ex)" ),
 				path;
 
-			$( "#shortestWay" ).on( "click", function () {
+			$( "#shortestWay" ).on( "vclick", function () {
 				path = widget.routemap( "shortestRoute", startId[0], endId[0] );
 				widget.routemap( "dishighlight" );
 				widget.routemap( "highlight", path );
 			});
 
-			$( "#minimumTransfers" ).on( "click", function () {
+			$( "#minimumTransfers" ).on( "vclick", function () {
 				path = widget.routemap( "minimumTransfers", startId[0], endId[1] );
 				widget.routemap( "dishighlight" );
 				widget.routemap( "highlight", path );
 			});
 
-			$( "#clearWay" ).on( "click", function () {
+			$( "#clearWay" ).on( "vclick", function () {
 				widget.routemap( "dishighlight" );
 			});
 
-			$( "#getIdsByName" ).on( "click", function () {
+			$( "#getIdsByName" ).on( "vclick", function () {
 				alert( widget.routemap( "getIdsByName", "station5(ex)" ) );
 			});
 
-			$( "#getNameById" ).on( "click", function () {
+			$( "#getNameById" ).on( "vclick", function () {
 				alert( widget.routemap( "getNameById", "5" ) );
 			});
 
-			$( "#highlight" ).on( "click", function () {
-				var path = ["3", "4", "33", "44", "45" ];
+			$( "#highlight" ).on( "vclick", function () {
+				var path = [ "3", "4", "33", "44", "45" ];
 				widget.routemap( "highlight", path );
 			});
 
-			$( "#dishighlight" ).on( "click", function () {
-				var path = ["3", "4", "33", "44", "45" ];
+			$( "#dishighlight" ).on( "vclick", function () {
+				var path = [ "3", "4", "33", "44", "45" ];
 				widget.routemap( "dishighlight", path );
 			});
 		});

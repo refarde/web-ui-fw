@@ -79,7 +79,7 @@ define( [
 				self.refresh( true );
 			}
 
-			svgContainer.on( "mouseover", function ( event ) {
+			svgContainer.on( "vclick", function ( event ) {
 				var target = event.target,
 					targetId,
 					tagName = target.tagName;
@@ -309,7 +309,6 @@ define( [
 					}, lines[i].style );
 
 					this._node( group, "text", {
-						"class": "ui-line ui-id-" + lineId,
 						x : 25,
 						y : 13 + (i * 15)
 					}, { fontSize: DEFAULT_STYLE.font.fontSize || "0.75rem"} ).appendChild( group.ownerDocument.createTextNode( lineId ) );
@@ -581,7 +580,7 @@ define( [
 			stationList = this._stationList;
 
 			path.map( function ( id ) {
-				if ( id.indexOf( "line" ) > - 1) {
+				if ( id.indexOf( "line" ) > -1 ) {
 					self._addClassSVG( $( ".ui-line.ui-id-" + id ), "ui-highlight" );
 				} else {
 					for ( i = 0; i < stations.length; i += 1 ) {
