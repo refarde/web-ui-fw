@@ -6,62 +6,11 @@
 	<title>Routemap Demo - Web UI Framework Demos</title>
 	<link rel="stylesheet" href="../../../jqm/css/themes/default/jquery.mobile.css" />
 	<link rel="stylesheet" href="../../../css/themes/default/web-ui-fw.css" />
-
 	<link rel="stylesheet" href="../../../jqm/demos/_assets/css/jqm-demos.css">
 	<script src="../../../jqm/js/jquery.js"></script>
 	<script src="../../../jqm/js/"></script>
 	<script src="../../../js/"></script>
 	<script src="../../_assets/js/"></script>
-	<script>
-		$( document ).on( "routemapcreate", function ( e ) {
-			widget = $( "#routemapTest" );
-			widget.on( "select", function( e, id ) {
-				widget.routemap( "dishighlight" );
-
-				if ( id ) {
-					widget.routemap( "highlight", [id] );
-				}
-			});
-			
-			/* for button demo */
-			var startId = widget.routemap( "getIdsByName", "station21" )[0],
-				endId = widget.routemap( "getIdsByName", "station7(ex)" )[0],
-				$popup = $( "#routePopup .ui-popup-text"),
-				path;
-
-			$( "#shortestWay" ).on( "vclick", function () {
-				path = widget.routemap( "shortestRoute", startId, endId );
-				widget.routemap( "dishighlight" ).routemap( "highlight", path );
-			});
-
-			$( "#minimumTransfers" ).on( "vclick", function () {
-				path = widget.routemap( "minimumTransfers", startId, endId );
-				widget.routemap( "dishighlight" ).routemap( "highlight", path );
-			});
-
-			$( "#clearWay" ).on( "vclick", function () {
-				widget.routemap( "dishighlight" );
-			});
-
-			$( "#getIdsByName" ).on( "vclick", function () {
-				$popup.text( ( widget.routemap( "getIdsByName", "station5(ex)" ) ) );
-			});
-
-			$( "#getNameById" ).on( "vclick", function () {
-				$popup.text( ( widget.routemap( "getNameById", "5" ) ) );
-			});
-
-			$( "#highlight" ).on( "vclick", function () {
-				widget.routemap( "highlight", ["3", "4", "33", "44", "45" ] );
-			});
-
-			$( "#dishighlight" ).on( "vclick", function () {
-				widget.routemap( "dishighlight", ["3", "4", "33", "44", "45" ] );
-			});
-		});
-	</script>
-
-
 </head>
 <body>
 	<div data-role="page" id="routemap" data-dom-cache="true">
@@ -102,7 +51,54 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> <!--/content -->
 	</div>
+	<script>
+		$( document ).on( "routemapcreate", function ( e ) {
+			var widget = $( "#routemapTest" ),
+				startId = widget.routemap( "getIdsByName", "station21" )[0],
+				endId = widget.routemap( "getIdsByName", "station7(ex)" )[0],
+				$popup = $( "#routePopup .ui-popup-text"),
+				path;
+
+			widget.on( "select", function( e, id ) {
+				widget.routemap( "dishighlight" );
+
+				if ( id ) {
+					widget.routemap( "highlight", [id] );
+				}
+			});
+
+			$( "#shortestWay" ).on( "vclick", function () {
+				path = widget.routemap( "shortestRoute", startId, endId );
+				widget.routemap( "dishighlight" ).routemap( "highlight", path );
+			});
+
+			$( "#minimumTransfers" ).on( "vclick", function () {
+				path = widget.routemap( "minimumTransfers", startId, endId );
+				widget.routemap( "dishighlight" ).routemap( "highlight", path );
+			});
+
+			$( "#clearWay" ).on( "vclick", function () {
+				widget.routemap( "dishighlight" );
+			});
+
+			$( "#getIdsByName" ).on( "vclick", function () {
+				$popup.text( ( widget.routemap( "getIdsByName", "station5(ex)" ) ) );
+			});
+
+			$( "#getNameById" ).on( "vclick", function () {
+				$popup.text( ( widget.routemap( "getNameById", "5" ) ) );
+			});
+
+			$( "#highlight" ).on( "vclick", function () {
+				widget.routemap( "highlight", ["3", "4", "33", "44", "45" ] );
+			});
+
+			$( "#dishighlight" ).on( "vclick", function () {
+				widget.routemap( "dishighlight", ["3", "4", "33", "44", "45" ] );
+			});
+		});
+	</script>
 </body>
 </html>

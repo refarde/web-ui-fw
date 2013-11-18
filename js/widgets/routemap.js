@@ -19,15 +19,14 @@ define( [
 			exchangeRadius: 6,
 			exchangeStyle: {
 				fill: "white",
-				stroke: "red",
+				stroke: "gray",
 				strokeWidth: 2
 			},
 			stationRadius: 4,
 			stationStyle: {
 				fill: "white",
 				stroke: "black",
-				strokeWidth: 1,
-				r:6
+				strokeWidth: 1
 			},
 			lineStyle: {
 				fill: "none",
