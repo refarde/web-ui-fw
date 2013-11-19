@@ -56,7 +56,7 @@ define( [
 		_create: function () {
 			var self = this,
 				view = self.element,
-				svgContainer = $( "<div class='ui-routemap-container'>" ).appendTo( view );
+				routemapContainer = $( "<div class='ui-routemap-container'>" ).appendTo( view );
 
 			self._svg = $( document.createElementNS( svgNameSpace, "svg" ) )
 				.attr( {
@@ -64,7 +64,7 @@ define( [
 					"width": "100%",
 					"height": "100%",
 					"class": "ui-routemap-svg"
-				} ).appendTo( svgContainer )[0];
+				} ).appendTo( routemapContainer )[0];
 
 			view.addClass( "ui-routemap" );
 
@@ -76,7 +76,7 @@ define( [
 				self.refresh( true );
 			}
 
-			svgContainer.on( "vclick", function ( event ) {
+			routemapContainer.on( "vclick", function ( event ) {
 				var target = $( event.target ),
 					targetId,
 					classList = target[0].classList;
@@ -176,11 +176,11 @@ define( [
 				shorthand,
 				controlPoint = [],
 				graph= {},
-				svgContainer = this.element.find( ".ui-routemap-container" ),
-				marginTop = parseInt( svgContainer.css( "marginTop" ), 10 ) || 0,
-				marginBottom = parseInt( svgContainer.css( "marginBottom" ), 10 ) || 0,
-				marginLeft = parseInt( svgContainer.css( "marginLeft" ), 10 ) || 0,
-				marginRight = parseInt( svgContainer.css( "marginRight" ), 10 ) || 0,
+				routemapContainer = this.element.find( ".ui-routemap-container" ),
+				marginTop = parseInt( routemapContainer.css( "marginTop" ), 10 ) || 0,
+				marginBottom = parseInt( routemapContainer.css( "marginBottom" ), 10 ) || 0,
+				marginLeft = parseInt( routemapContainer.css( "marginLeft" ), 10 ) || 0,
+				marginRight = parseInt( routemapContainer.css( "marginRight" ), 10 ) || 0,
 				convertCoord = function ( pos ) {
 					return ( unit * pos );
 				};
@@ -275,7 +275,7 @@ define( [
 			this._drawingRange = [ minX, minY, maxX, maxY ];
 			this._graph = graph;
 
-			svgContainer.width( ( maxX + minX ) * unit + marginLeft + marginRight )
+			routemapContainer.width( ( maxX + minX ) * unit + marginLeft + marginRight )
 				.height( ( maxY + minY ) * unit + marginTop + marginBottom );
 		},
 
@@ -630,13 +630,13 @@ define( [
 		},
 
 		refresh: function ( redraw ) {
-			var view, svgContainer;
+			var view, routemapContainer;
 
 			view = this.element;
-			svgContainer = view.find( "ui-routemap-container" );
+			routemapContainer = view.find( "ui-routemap-container" );
 
-			if ( svgContainer.width() !== view.width() ) {
-				svgContainer.width( view.width() );
+			if ( routemapContainer.width() !== view.width() ) {
+				routemapContainer.width( view.width() );
 			}
 
 			if ( redraw ) {
