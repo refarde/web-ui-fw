@@ -80,9 +80,7 @@ define( [
 				var target = $( event.target ),
 					targetId,
 					classList = target[0].classList;
-				if ( classList.contains( "ui-shape" ) || classList.contains( "ui-label" ) ) {
-					targetId = regId.exec( target.attr( "class" ) );
-				} else if ( classList.contains( "ui-line" ) ) {
+				if ( classList.contains( "ui-shape" ) || classList.contains( "ui-label" ) || classList.contains( "ui-line") ) {
 					targetId = regId.exec( target.attr( "class" ) );
 				}
 				target.trigger( "select", targetId ? targetId[1] : undefined );
