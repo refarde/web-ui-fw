@@ -361,12 +361,12 @@ define( [
 					width : stationRadius * 2,
 					height : stationRadius * 2,
 					"border-color" : station.style.stroke
-				} );				
+				} );
 				// stationGroup = this._node( null, "g", {
 				// 	"class": classes
 				// } );				
 				// // draw station
-				
+
 				// this._node( stationGroup, "circle", {
 				// 	"class": "ui-shape",
 				// 	cx: position[0],
