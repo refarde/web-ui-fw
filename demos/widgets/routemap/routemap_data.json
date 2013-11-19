@@ -9,7 +9,7 @@
 		"name": "Line 1",
 		"style": {
 			"line" : { "stroke": "blue" },
-			"station": { "stroke": "rgb(85, 85, 85)" }
+			"station": { "stroke": "blue" }
 		},
 		"branches": [
 			[
@@ -28,7 +28,7 @@
 		"name": "Line 2",
 		"style": {
 			"line" : { "stroke": "red" },
-			"station": { "stroke": "rgb(85, 85, 85)" }
+			"station": { "stroke": "red" }
 		},
 		"branches": [
 			[
@@ -48,7 +48,7 @@
 		"name": "Line 3",
 		"style": {
 			"line" : { "stroke": "green" },
-			"station": { "stroke": "rgb(85, 85, 85)" }
+			"station": { "stroke": "green" }
 		},
 		"branches": [
 			[
@@ -65,7 +65,7 @@
 		"name": "Line 4",
 		"style": {
 			"line" : { "stroke": "orange" },
-			"station": { "stroke": "rgb(85, 85, 85)" }
+			"station": { "stroke": "orange" }
 		},
 		"branches": [
 			[

@@ -80,13 +80,11 @@ define( [
 				var target = $( event.target ),
 					targetId,
 					classList = target[0].classList;
-
 				if ( classList.contains( "ui-shape" ) || classList.contains( "ui-label" ) ) {
-					targetId = regId.exec( target.parent().attr( "class" ) );
+					targetId = regId.exec( target.attr( "class" ) );
 				} else if ( classList.contains( "ui-line" ) ) {
 					targetId = regId.exec( target.attr( "class" ) );
 				}
-
 				target.trigger( "select", targetId ? targetId[1] : undefined );
 			} );
 		},
@@ -323,82 +321,98 @@ define( [
 				stationRadius,
 				stations = this._stations,
 				station,
-				stationGroup,
+				// stationGroup,
 				label,
 				coordinates,
 				position,
-				labelPosition = [0, 0],
-				labelAngle = 0,
-				textGroup,
-				stationName,
-				text,
-				classes;
+				// labelPosition = [0, 0],
+				// labelAngle = 0,
+				// textGroup,
+				// stationName,
+				// text,
+				classes,
+				stationborder,
+				$stationCircle,
+				$routemapContainer = this.element.find( ".ui-routemap-container" ),
+				$stationsDiv = $( document.createElement( "div" ) )
+					.appendTo( $routemapContainer )
+					.addClass("ui-stations");
 
 			for ( i = 0; i < stations.length; i += 1 ) {
 				station = stations[i];
 				label = station.label;
 				coordinates = station.coordinates;
 				position = [unit * coordinates[0], unit * coordinates[1] ];
-				stationRadius = station.radius;
-
-				classes = "ui-station ui-id-" + station.id;
+				
+				classes = "ui-shape ui-id-" + station.id;
 				if ( station.transfer.length ) {
-					classes += " ui-id-" + station.transfer.join( " ui-id-" );
+					classes += " ui-id-" + station.transfer.join( " ui-id-" ) + " ui-transfer";
 				}
+				$stationCircle = $( document.createElement( "div" ) )
+					.appendTo( $stationsDiv )
+					.addClass( classes );
 
-				stationGroup = this._node( null, "g", {
-					"class": classes
-				} );
+				stationborder = $stationCircle.outerWidth(true) - $stationCircle.innerWidth();
+				stationRadius = $stationCircle.width();
 
-				// draw station
-				this._node( stationGroup, "circle", {
-					"class": "ui-shape",
-					cx: position[0],
-					cy: position[1],
-					r: stationRadius
-				}, station.style );
+				$stationCircle.css( {
+					"top" : position[1] + $routemapContainer.position().top - stationRadius - stationborder/2,
+					"left" : position[0] + $routemapContainer.position().left - stationRadius - stationborder/2,
+					width : stationRadius * 2,
+					height : stationRadius * 2,
+					"border-color" : station.style.stroke
+				} );				
+				// stationGroup = this._node( null, "g", {
+				// 	"class": classes
+				// } );				
+				// // draw station
+				
+				// this._node( stationGroup, "circle", {
+				// 	"class": "ui-shape",
+				// 	cx: position[0],
+				// 	cy: position[1],
+				// 	r: stationRadius
+				// }, station.style );
+				// textGroup = this._node( stationGroup, "g" );
+				// labelAngle = ( station.labelAngle ) ? -parseInt( station.labelAngle, 10 ) : 0;
 
-				textGroup = this._node( stationGroup, "g" );
+				// // draw station name
+				// stationName = this._languageData ?
+				// 	( this._languageData[label] || label ) :
+				// 		label;
 
-				labelAngle = ( station.labelAngle ) ? -parseInt( station.labelAngle, 10 ) : 0;
+				// text = this._text( textGroup, stationName || "?", { "class": "ui-label" },
+				// 	{ transform: "rotate(" + labelAngle + ")", fontSize: station.font.fontSize || "9" }
+				// );
 
-				// draw station name
-				stationName = this._languageData ?
-					( this._languageData[label] || label ) :
-						label;
+				// switch ( station.labelPosition || "s" ) {
+				// case "w" :
+				// 	labelPosition = [ position[0] - stationRadius * 3 / 2 - text.getBBox().width, position[1] + stationRadius / 2 ];
+				// 	break;
+				// case "e" :
+				// 	labelPosition = [ position[0] + stationRadius * 3 / 2, position[1] + stationRadius / 2 ];
+				// 	break;
+				// case "s" :
+				// 	labelPosition = [ position[0] - text.getBBox().width / 2, position[1] + stationRadius + text.getBBox().height ];
+				// 	break;
+				// case "n" :
+				// 	labelPosition = [ position[0] - text.getBBox().width / 2, position[1] - stationRadius - text.getBBox().height / 3 ];
+				// 	break;
+				// case "nw" :
+				// 	labelPosition = [ position[0] - stationRadius * 3 / 2 - text.getBBox().width, position[1] - stationRadius / 2 - text.getBBox().height / 3  ];
+				// 	break;
+				// case "ne" :
+				// 	labelPosition = [ position[0] + stationRadius * 3 / 2, position[1] - stationRadius / 2 - text.getBBox().height / 3 ];
+				// 	break;
+				// case "sw" :
+				// 	labelPosition = [ position[0] - stationRadius * 3 / 2 - text.getBBox().width, position[1] + stationRadius + text.getBBox().height / 2  ];
+				// 	break;
+				// case "se" :
+				// 	labelPosition = [ position[0] + stationRadius * 3 / 2, position[1] + stationRadius + text.getBBox().height / 2 ];
+				// 	break;
+				// }
 
-				text = this._text( textGroup, stationName || "?", { "class": "ui-label" },
-					{ transform: "rotate(" + labelAngle + ")", fontSize: station.font.fontSize || "9" }
-				);
-
-				switch ( station.labelPosition || "s" ) {
-				case "w" :
-					labelPosition = [ position[0] - stationRadius * 3 / 2 - text.getBBox().width, position[1] + stationRadius / 2 ];
-					break;
-				case "e" :
-					labelPosition = [ position[0] + stationRadius * 3 / 2, position[1] + stationRadius / 2 ];
-					break;
-				case "s" :
-					labelPosition = [ position[0] - text.getBBox().width / 2, position[1] + stationRadius + text.getBBox().height ];
-					break;
-				case "n" :
-					labelPosition = [ position[0] - text.getBBox().width / 2, position[1] - stationRadius - text.getBBox().height / 3 ];
-					break;
-				case "nw" :
-					labelPosition = [ position[0] - stationRadius * 3 / 2 - text.getBBox().width, position[1] - stationRadius / 2 - text.getBBox().height / 3  ];
-					break;
-				case "ne" :
-					labelPosition = [ position[0] + stationRadius * 3 / 2, position[1] - stationRadius / 2 - text.getBBox().height / 3 ];
-					break;
-				case "sw" :
-					labelPosition = [ position[0] - stationRadius * 3 / 2 - text.getBBox().width, position[1] + stationRadius + text.getBBox().height / 2  ];
-					break;
-				case "se" :
-					labelPosition = [ position[0] + stationRadius * 3 / 2, position[1] + stationRadius + text.getBBox().height / 2 ];
-					break;
-				}
-
-				textGroup.setAttribute( "transform", "translate(" + labelPosition[0] + "," + labelPosition[1] + ")" );
+				// textGroup.setAttribute( "transform", "translate(" + labelPosition[0] + "," + labelPosition[1] + ")" );
 			}
 		},
 
@@ -601,7 +615,6 @@ define( [
 			if ( !this._svg || !target ) {
 				return;
 			}
-
 			view = this.element;
 			targetLength = target.length;
 
@@ -619,7 +632,7 @@ define( [
 
 			view = this.element;
 			if ( !target ) {
-				this._removeClassSVG( view.find( ".ui-station, .ui-line" ), "ui-highlight" );
+				this._removeClassSVG( view.find( ".ui-shape, .ui-line" ), "ui-highlight" );
 				return;
 			}
 
