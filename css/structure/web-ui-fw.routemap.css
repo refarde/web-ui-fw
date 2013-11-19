@@ -1,3 +1,24 @@
+.ui-routemap {
+	font-size: 1rem;
+}
+
+.ui-routemap .ui-line {
+	fill: none;
+	stroke: black;
+	stroke-width: 3px;
+}
+
+.ui-routemap .ui-station .ui-shape {
+	fill: white;
+	stroke: black;
+	stroke-width: 1px;
+}
+
+.ui-routemap .ui-exchange .ui-shape {
+	stroke: gray;
+	stroke-width: 2px;
+}
+
 .ui-routemap .ui-line.ui-highlight {
 	-webkit-animation: uiline 0.8s infinite;
 	animation: uiline 0.8s infinite;
@@ -6,8 +27,8 @@
 	-webkit-animation: uistation 0.8s infinite;
 	animation: uistation 0.8s infinite;
 }
-.ui-routemap .ui-highlight .ui-label {
-	font-size: 1rem;
+.ui-routemap .ui-highlight .ui-label tspan {
+	font-weight: bold;
 }
 
 @-webkit-keyframes uistation {

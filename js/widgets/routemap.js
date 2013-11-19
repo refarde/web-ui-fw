@@ -343,7 +343,7 @@ define( [
 
 				classes = "ui-station ui-id-" + station.id;
 				if ( station.transfer.length ) {
-					classes += " ui-id-" + station.transfer.join( " ui-id-" );
+					classes += " ui-exchange ui-id-" + station.transfer.join( " ui-id-" );
 				}
 
 				stationGroup = this._node( null, "g", {
@@ -367,9 +367,12 @@ define( [
 					( this._languageData[label] || label ) :
 						label;
 
-				text = this._text( textGroup, stationName || "?", { "class": "ui-label" },
-					{ transform: "rotate(" + labelAngle + ")", fontSize: station.font.fontSize || "9" }
-				);
+				text = this._text( textGroup, stationName || "?", { 
+					"class": "ui-label",
+					transform: "rotate(" + labelAngle + ")"
+				}, {
+					fontSize: station.font.fontSize || "9" 
+				} );
 
 				switch ( station.labelPosition || "s" ) {
 				case "w" :
@@ -406,17 +409,27 @@ define( [
 		// SVG
 
 		_node: function ( parent, name, settings, style ) {
-			var node, key, value,
-				attributes = $.extend( settings, style || {} );
+			var node, key, value, string = "";
 
 			parent = parent || this._svg;
 			node = parent.ownerDocument.createElementNS( svgNameSpace, name );
+			settings = settings || {};
 
-			for ( key in attributes ) {
-				value = attributes[key];
+			for ( key in settings ) {
+				value = settings[key];
 				if ( value && ( typeof value !== "string" || value !== "" ) ) {
 					node.setAttribute( key.replace( /([a-z])([A-Z])/g, "$1-$2" ).toLowerCase(), value);
 				}
+			}
+
+			if ( style ) {
+				for ( key in style ) {
+					value = style[key];
+					if ( value && ( typeof value !== "string" || value !== "" ) ) {
+						string += key.replace( /([a-z])([A-Z])/g, "$1-$2" ).toLowerCase() + ":" + value + ";";
+					}
+				}
+				node.setAttribute( "style", string );
 			}
 
 			parent.appendChild( node );
