@@ -1,5 +1,5 @@
 .ui-routemap {
-	font-size: 1rem;
+	font-size: 0.77rem;
 }
 
 .ui-routemap .ui-line {
@@ -27,8 +27,8 @@
 	-webkit-animation: uistation 0.8s infinite;
 	animation: uistation 0.8s infinite;
 }
-.ui-routemap .ui-highlight .ui-label tspan {
-	font-weight: bold;
+.ui-routemap .ui-highlight .ui-label {
+	font-size: 1rem;
 }
 
 @-webkit-keyframes uistation {
