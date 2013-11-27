@@ -289,7 +289,7 @@ define( [
 					this._node( group, "text", {
 						x : 25,
 						y : 13 + (i * 15)
-					} )	.appendChild( group.ownerDocument.createTextNode( lineId ) );
+					} ).appendChild( group.ownerDocument.createTextNode( lineId ) );
 				}
 			}
 		},
