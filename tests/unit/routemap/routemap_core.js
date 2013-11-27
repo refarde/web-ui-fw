@@ -33,9 +33,9 @@
 			ids = $routemap.routemap( "getIdsByName", ( $(this).text() ) );
 			highlightPath.push( ids[0] );
 		} );
-		deepEqual( highlightPath , ["3", "4", "5"], "highlight( ['3', '4', '5'] ) PASS" );
+		deepEqual( highlightPath , ["3", "4", "5"], "Function :: highlight( ['3', '4', '5'] ) PASS" );
 		
-		$routemap.routemap( "dishighlight" );
-		deepEqual( $( ".ui-highlight" ).length , 0, "dishighlight() PASS" );
+		$routemap.routemap( "dishighlight", ["3", "4", "5"] );
+		deepEqual( $( ".ui-highlight" ).length , 0, "Function :: dishighlight(['3', '4', '5']) PASS" );
 	});
 })( jQuery );
