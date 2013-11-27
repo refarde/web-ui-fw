@@ -4,15 +4,12 @@
 
 	test( "routemap test cases.", function() {
 		var	$routemap = $(".ui-routemap"),
-			startId,
-			endId,
-			path = ["3", "4", "33", "44", "45"],
 			expectedShortestPath = ["21", "22", "2", "3", "4", "5", "6", "7"],
 			expectedminTransPath = ["21", "22", "23", "24", "25", "26", "27", "28"],
 			resultPath,
 			name,
 			ids,
-			highlightPath =[];
+			highlightPath = [];
 
 		deepEqual( $routemap.length , 1, "The widget is created." );
 
@@ -36,7 +33,7 @@
 			ids = $routemap.routemap( "getIdsByName", ( $(this).text() ) );
 			highlightPath.push( ids[0] );
 		} );
-		deepEqual( highlightPath , ["3", "4", "5"], 'highlight( ["3", "4", "5"] ) PASS' );
+		deepEqual( highlightPath , ["3", "4", "5"], "highlight( ['3', '4', '5'] ) PASS" );
 		
 		$routemap.routemap( "dishighlight" );
 		deepEqual( $( ".ui-highlight" ).length , 0, "dishighlight() PASS" );
