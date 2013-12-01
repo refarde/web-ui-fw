@@ -7,12 +7,20 @@
 	stroke-width: 3px;
 }
 
+.ui-routemap .ui-bridge-container {
+	position: absolute;
+}
+
 .ui-routemap .ui-station-container {
 	position: absolute;
 }
 
 .ui-routemap .ui-station-container .ui-station {
 	display: block;
+}
+
+.ui-routemap .ui-station-container .ui-station .ui-bridge {
+	position: absolute;
 }
 
 .ui-routemap .ui-station-container .ui-station .ui-label {

@@ -27,7 +27,6 @@ define( [
 		_languageData: null,
 		_lines: [],
 		_stations: [],
-		_stationsMap: [],
 		_nameList: {},
 		_graph: {},
 
@@ -148,6 +147,8 @@ define( [
 				exchangeStyle = data.exchangeStyle || {},
 				lineStyle,
 				coord,
+				occupations = {},
+				stationsMap = [],
 				minX = 9999,
 				minY = 9999,
 				maxX = 0,
@@ -165,7 +166,6 @@ define( [
 				marginBottom = parseInt( routemapContainer.css( "marginBottom" ), 10 ) || 0,
 				marginLeft = parseInt( routemapContainer.css( "marginLeft" ), 10 ) || 0,
 				marginRight = parseInt( routemapContainer.css( "marginRight" ), 10 ) || 0,
-
 				convertCoord = function ( pos ) {
 					return unit * pos;
 				};
@@ -196,6 +196,10 @@ define( [
 							graph[station.id][branch[k + 1].id] = 3;
 						}
 
+						if ( !stationsMap[coord[0]] ) {
+							stationsMap[coord[0]] = [];
+						}
+
 						// info
 						minX = ( minX > coord[0] ) ? coord[0] : minX;
 						minY = ( minY > coord[1] ) ? coord[1] : minY;
@@ -203,23 +207,32 @@ define( [
 						maxY = ( maxY < coord[1] ) ? coord[1] : maxY;
 
 						//stations
-						if ( !this._stationsMap[coord[0]] ) {
-							this._stationsMap[coord[0]] = [];
-						}
+						this._nameList[station.id] = station.label;
 
-						this._nameList[ station.id ] = station.label;
-
-						if ( !this._stationsMap[coord[0]][coord[1]] ) {
+						if ( !occupations[station.label] ) {
 							station.style = stationStyle;
 							station.transfer = [];
-							this._stationsMap[coord[0]][coord[1]] = station;
+							station.bridge = {};
+							occupations[station.label] = station;
+							stationsMap[coord[0]][coord[1]] = station;
 							this._stations.push( station );
-						} else {
-							exchange = this._stationsMap[coord[0]][coord[1]];
+						} else if ( occupations[station.label].id !== station.id ) {
+							exchange = occupations[station.label];
+
 							if ( !exchange.transfer.length ) {
 								exchange.style = exchangeStyle;
 							}
+
 							exchange.transfer.push( station.id );
+
+							if ( !stationsMap[coord[0]][coord[1]] ) {
+								station.style = exchangeStyle;
+								stationsMap[coord[0]][coord[1]] = station;
+								station.transfer = exchange.transfer;
+								station.bridge = exchange;
+								this._stations.push( station );
+							}
+
 							graph[station.id][exchange.id] = "TRANSPER";
 							graph[exchange.id][station.id] = "TRANSPER";
 						}
@@ -302,95 +315,142 @@ define( [
 		},
 
 		_drawElements: function () {
-			var i,
+			var i = 0,
 				options = this.options,
 				unit = options.unit,
-				stationRadius,
 				stations = this._stations,
-				station,
-				label,
-				coordinates,
-				position,
-				labelPosition = [0, 0],
-				labelAngle = 0,
-				stationName,
-				classes,
-				top, left, key,
-				$station,
-				$stationCircle,
-				$textSpan,
-				textSpanWidth,
-				textSpanHeight,
+				stationsLength = stations.length,
 				$stationContainer = this.element.find( ".ui-station-container" );
 
-			for ( i = 0; i < stations.length; i += 1 ) {
-				station = stations[i];
-				label = station.label;
-				coordinates = station.coordinates;
-				position = [unit * coordinates[0], unit * coordinates[1] ];
-				classes = "ui-station ui-id-" + station.id;
+				function draw() {
+					var key, top, left,
+						stationRadius,
+						stationName,
+						bridge,
+						$station,
+						$stationCircle,
+						$stationConnect,
+						$textSpan,
+						textSpanWidth,
+						textSpanHeight,
+						labelPosition = [0, 0],
+						labelAngle = 0,
+						station = stations[i],
+						label = station.label,
+						coordinates = station.coordinates,
+						position = [unit * coordinates[0], unit * coordinates[1]],
+						classes = "ui-station",
+						ctx, canvasTop, canvasLeft;
 
-				if ( station.transfer.length ) {
-					classes += " ui-id-" + station.transfer.join( " ui-id-" ) + " ui-exchange";
-				}
+					if ( station.transfer.length ) {
+						classes += " ui-id-" + ( station.bridge.id || station.id ) +
+							" ui-id-" + station.transfer.join( " ui-id-" ) +
+							" ui-exchange";
+					} else {
+						classes += " ui-id-" + station.id;
+					}
 
-				$station = $( "<div class='" + classes + "'></div>" ).appendTo( $stationContainer );
-				$stationCircle = $( "<div class='ui-shape'></div>" ).appendTo( $station );
+					$station = $( "<div class='" + classes + "'></div>" ).appendTo( $stationContainer );
+					$stationCircle = $( "<div class='ui-shape'></div>" ).appendTo( $station );
 
-				if ( station.style ) {
-					for ( key in station.style ) {
-						$stationCircle.css( key, station.style[key] );
+					if ( station.style ) {
+						for ( key in station.style ) {
+							$stationCircle.css( key, station.style[key] );
+						}
+					}
+
+					stationRadius = $stationCircle.outerWidth() / 2;
+					top = position[1];
+					left = position[0];
+					$stationCircle.css( {
+						"top" : top - stationRadius,
+						"left" : left - stationRadius
+					} );
+
+					if ( station.bridge.id ) {
+						bridge = station.bridge;
+						canvasTop = ( ( bridge.coordinates[1] < coordinates[1] ) ? bridge.coordinates[1] : coordinates[1] ) * unit;
+						canvasLeft = ( ( bridge.coordinates[0] < coordinates[0] ) ? bridge.coordinates[0] : coordinates[0] ) * unit;
+						$stationConnect = $( "<canvas class='ui-bridge" +
+							" ui-bridge-" + station.id + "-" + bridge.id + "'>" )
+							.css( {
+								"top": canvasTop - stationRadius,
+								"left": canvasLeft - stationRadius
+							} )
+							.attr( {
+								"width": Math.abs( bridge.coordinates[0] - coordinates[0] ) * unit + $stationCircle.outerWidth(),
+								"height": Math.abs( bridge.coordinates[1] - coordinates[1] ) * unit + $stationCircle.outerWidth()
+							})
+							.appendTo( $station );
+
+						ctx = $stationConnect[0].getContext( "2d" );
+						ctx.beginPath();
+						ctx.lineCap = "butt";
+						ctx.lineWidth = $stationCircle.outerWidth();
+						ctx.strokeStyle = $stationCircle.css( "borderColor" );
+						ctx.moveTo( bridge.coordinates[0] * unit + stationRadius - canvasLeft,
+							bridge.coordinates[1] * unit + stationRadius - canvasTop );
+						ctx.lineTo( coordinates[0] * unit + stationRadius - canvasLeft,
+							coordinates[1] * unit + stationRadius - canvasTop );
+						ctx.stroke();
+
+						ctx.beginPath();
+						ctx.lineCap = "round";
+						ctx.lineWidth = $stationCircle.innerWidth();
+						ctx.strokeStyle = $stationCircle.css( "backgroundColor" );
+						ctx.moveTo( bridge.coordinates[0] * unit + stationRadius - canvasLeft,
+							bridge.coordinates[1] * unit + stationRadius - canvasTop );
+						ctx.lineTo( coordinates[0] * unit + stationRadius - canvasLeft,
+							coordinates[1] * unit + stationRadius - canvasTop );
+						ctx.stroke();
+					}
+
+					labelAngle = station.labelAngle ? -parseInt( station.labelAngle, 10 ) : 0;
+					stationName = this._languageData ? ( this._languageData[label] || label ) : label;
+					$textSpan = $( "<span class='ui-label'>"+ stationName +"</span>" ).appendTo( $station );
+					textSpanWidth = $textSpan.outerWidth( true );
+					textSpanHeight = $textSpan.outerHeight( true );
+					top -= textSpanHeight / 2;
+
+					switch ( station.labelPosition || "s" ) {
+					case "w" :
+						labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top ];
+						break;
+					case "nw" :
+						labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top - textSpanHeight / 2 ];
+						break;
+					case "sw" :
+						labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top + textSpanHeight / 2 ];
+						break;
+					case "e" :
+						labelPosition = [ left + stationRadius * 3 / 2, top ];
+						break;
+					case "ne" :
+						labelPosition = [ left + stationRadius * 3 / 2, top - textSpanHeight / 2 ];
+						break;
+					case "se" :
+						labelPosition = [ left + stationRadius * 3 / 2, top + textSpanHeight / 2 ];
+						break;
+					case "s" :
+						labelPosition = [ left - textSpanWidth / 2, top + textSpanHeight ];
+						break;
+					case "n" :
+						labelPosition = [ left - textSpanWidth / 2, top - textSpanHeight ];
+						break;
+					}
+
+					$textSpan.css( {
+						"top" : labelPosition[1],
+						"left" : labelPosition[0],
+						"transform" : "rotate( " + labelAngle + "deg )"
+					} );
+
+					if ( ++i < stationsLength ) {
+						setTimeout( draw, 1 );
 					}
 				}
 
-				stationRadius = $stationCircle.outerWidth() / 2;
-				top = position[1];
-				left = position[0];
-				$stationCircle.css( {
-					"top" : top - stationRadius,
-					"left" : left - stationRadius
-				} );
-
-				labelAngle = station.labelAngle ? -parseInt( station.labelAngle, 10 ) : 0;
-				stationName = this._languageData ? ( this._languageData[label] || label ) : label;
-				$textSpan = $( "<span class='ui-label'>"+ stationName +"</span>" ).appendTo( $station );
-				textSpanWidth = $textSpan.outerWidth( true );
-				textSpanHeight = $textSpan.outerHeight( true );
-				top -= textSpanHeight / 2;
-
-				switch ( station.labelPosition || "s" ) {
-				case "w" :
-					labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top ];
-					break;
-				case "nw" :
-					labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top - textSpanHeight / 2 ];
-					break;
-				case "sw" :
-					labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top + textSpanHeight / 2 ];
-					break;
-				case "e" :
-					labelPosition = [ left + stationRadius * 3 / 2, top ];
-					break;
-				case "ne" :
-					labelPosition = [ left + stationRadius * 3 / 2, top - textSpanHeight / 2 ];
-					break;
-				case "se" :
-					labelPosition = [ left + stationRadius * 3 / 2, top + textSpanHeight / 2 ];
-					break;
-				case "s" :
-					labelPosition = [ left - textSpanWidth / 2, top + textSpanHeight ];
-					break;
-				case "n" :
-					labelPosition = [ left - textSpanWidth / 2, top - textSpanHeight ];
-					break;
-				}
-
-				$textSpan.css( {
-					"top" : labelPosition[1],
-					"left" : labelPosition[0],
-					"transform" : "rotate( " + labelAngle + "deg )"
-				} );
-			}
+			draw();
 		},
 
 		// -------------------------------------------------
