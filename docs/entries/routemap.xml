@@ -88,14 +88,14 @@
 			<desc>Adds a highlighting style to stations.
 			</desc>
 				<argument name="stations" type="Array">
-					<desc>The array of staion ids</desc>
+					<desc>The array of staion id</desc>
 				</argument>
 		</method>
 		<method name="dishighlight">
 			<desc>Removes a highlighting style from stations.
 			</desc>
 				<argument name="stations" type="Array">
-					<desc>The array of staion ids</desc>
+					<desc>The array of staion id</desc>
 				</argument>
 		</method>
 		<method name="refresh" example-params="options">
