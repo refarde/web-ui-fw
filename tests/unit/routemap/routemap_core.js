@@ -23,10 +23,10 @@
 		deepEqual( name, "5(ex)", "getNameById() returned a station name with associated the specified station ID." );
 
 		resultPath = $routemap.routemap( "shortestRoute", "21", "7" );
-		deepEqual( resultPath, expectedShortestPath , "shortestRoute() returned the array of station codes which is the shortest route." );
+		deepEqual( resultPath, expectedShortestPath , "shortestRoute() returned the array of station ids which is the shortest route." );
 
 		resultPath = $routemap.routemap( "minimumTransfers", "21", "7" );
-		deepEqual( resultPath, expectedminTransPath , "minimumTransfers() returned the array of station codes which is the route having minimum transfers." );
+		deepEqual( resultPath, expectedminTransPath , "minimumTransfers() returned the array of station ids which is the route having minimum transfers." );
 
 		$routemap.routemap( "highlight", ["3", "4", "5"] );
 		$( ".ui-highlight" ).each( function () {
