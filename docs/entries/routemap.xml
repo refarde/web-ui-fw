@@ -6,8 +6,8 @@
 	<longdesc>
 		<h3>Route Map</h3>
 		<p>Routemap is a jquery mobile plugin to render a route data.</p>
-		<p>Routemap supports JSON format for DB. So, user can set DB by setting a file path or a variable on the widget.And it drawing the line between two stations automatically to use DB. You can change each style for stations, routes, and labels to modify DB.</p>
-		<p>Routemap can indecated the shortest route between two stations that user selected. And it supports a multi-language, also.</p>
+		<p>Routemap supports JSON format for DB. So, It will be able to set DB by setting a file path or a variable on the widget. And it drawing the line between two stations automatically to use DB. It allows user to change each style for stations, routes, and labels to modify DB.</p>
+		<p>Routemap can indicated the shortest route between two stations that user selected. And also it supports a multi-language.</p>
 
 <pre><code>
 &lt;div data-role=&quot;routemap&quot; data-db=&quot;data.json&quot;&gt;
@@ -26,7 +26,7 @@
 		</option>
 		<option name="language" default="null" example-value="&quot;en&quot;">
 			<desc>
-				<p>Determine the current languauge. The valuse must be the abbreviation of language names(ex: English > en )</p>
+				<p>Determine the current languauge. The values must be the abbreviation of language names(ex: English > en )</p>
 			</desc>
 			<type name="String" />
 		</option>
@@ -39,7 +39,7 @@
 	</options>
 	<events>
 		<event name="create">
-			<desc>Triggered when a routemap is created
+			<desc>Triggered when a widget is created.
 			</desc>
 			<argument name="event" type="Event">
 				<desc></desc>
@@ -50,59 +50,59 @@
 		</event>
 	</events>
 	<methods>
-		<method name="getCodeByName">
-			<desc>Gets an array of station code associated with the specified station name.
+		<method name="getIdsByName">
+			<desc>Gets an array of station or line ids associated with the specified station or line name.
 			</desc>
 				<argument name="name" type="String">
-					<desc>The name of staion</desc>
+					<desc>The name of staion or line</desc>
 				</argument>
 		</method>
-		<method name="getNameByCode">
-			<desc>Gets a station name with associated the specified station code.
+		<method name="getNameById">
+			<desc>Gets a string of station or line name with associated the specified station or line id.
 			</desc>
 				<argument name="code" type="String">
-					<desc>The code of staion</desc>
+					<desc>The code of staion or line</desc>
 				</argument>
 		</method>
 		<method name="shortestRoute">
-			<desc>Returns the array of station codes which is the shortest route from source to destination.
+			<desc>Returns the array of station ids which is the shortest route from source to destination.
 			</desc>
 				<argument name="source" type="String">
-					<desc>The staion code of source</desc>
+					<desc>The staion id of source</desc>
 				</argument>
 				<argument name="destination" type="String">
-					<desc>The staion code of destination</desc>
+					<desc>The staion id of destination</desc>
 				</argument>
 		</method>
 		<method name="minimumTransfers">
-			<desc>Returns the array of station codes which is the route having minimum transfers from source to destination.
+			<desc>Returns the array of station ids which is the route having minimum transfers from source to destination.
 			</desc>
 				<argument name="source" type="String">
-					<desc>The staion code of source</desc>
+					<desc>The staion id of source</desc>
 				</argument>
 				<argument name="destination" type="String">
-					<desc>The staion code of destination</desc>
+					<desc>The staion id of destination</desc>
 				</argument>
 		</method>
 		<method name="highlight">
 			<desc>Adds a highlighting style to stations.
 			</desc>
 				<argument name="stations" type="Array">
-					<desc>The array of staion code</desc>
+					<desc>The array of staion ids</desc>
 				</argument>
 		</method>
 		<method name="dishighlight">
 			<desc>Removes a highlighting style from stations.
 			</desc>
 				<argument name="stations" type="Array">
-					<desc>The array of staion code</desc>
+					<desc>The array of staion ids</desc>
 				</argument>
 		</method>
 		<method name="refresh" example-params="options">
 			<desc>Resizes&amp;redraws the widget, after having made some external modifications.
 			</desc>
 				<argument name="redraw" default='false' type="Boolean">
-					<desc>When set to true, the widget will redraw everything by a route data.<br />Only re-layout the widget if set to false.</desc>
+					<desc>When set to true, the widget will redraw all of elements by a route data.<br />Only re-layout the widget if set to false.</desc>
 				</argument>
 		</method>
 	</methods>
