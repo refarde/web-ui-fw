@@ -442,6 +442,7 @@ define( [
 					$textSpan.css( {
 						"top" : labelPosition[1],
 						"left" : labelPosition[0],
+						"transform-origin" : ( labelAngle > 0 ) ? "100% 50%" : "0% 50%",
 						"transform" : "rotate( " + labelAngle + "deg )"
 					} );
 

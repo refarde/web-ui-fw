@@ -27,9 +27,6 @@
 	text-align: center;
 	white-space: nowrap;
 	position: absolute;
-	transform-origin: 0% 50%;
-	-moz-transform-origin:0% 50%;
-	-webkit-transform-origin: 0% 50%;
 }
 
 .ui-routemap .ui-station-container .ui-station .ui-shape {
