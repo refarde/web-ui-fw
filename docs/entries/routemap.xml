@@ -50,6 +50,16 @@
 				<desc></desc>
 			</argument>
 		</event>
+		<event name="select">
+			<desc>Triggered when a station or line is selected.
+			</desc>
+			<argument name="event" type="Event">
+				<desc></desc>
+			</argument>
+			<argument name="id" type="String">
+				<desc>selected station or line id </desc>
+			</argument>
+		</event>
 	</events>
 	<methods>
 		<method name="getIdsByName">
@@ -63,17 +73,17 @@
 			<desc>Gets a string of station or line name with associated the specified station or line id.
 			</desc>
 				<argument name="code" type="String">
-					<desc>The code of station or line</desc>
+					<desc>The id of station or line</desc>
 				</argument>
 		</method>
 		<method name="shortestRoute">
-			<desc>Returns the array of station ids which is the shortest route from source to destination.
+			<desc>Returns an array of station ids which is the shortest route from source to destination.
 			</desc>
 				<argument name="source" type="String">
-					<desc>The station id of source</desc>
+					<desc>a station id of source</desc>
 				</argument>
 				<argument name="destination" type="String">
-					<desc>The station id of destination</desc>
+					<desc>a station id of destination</desc>
 				</argument>
 <pre><code>
 var widget = $( "#routemapTest" ),
@@ -89,7 +99,7 @@ widget.on( "vclick", function () {
 
 		</method>
 		<method name="minimumTransfers">
-			<desc>Returns the array of station ids which is the route having minimum transfers from source to destination.
+			<desc>Returns an array of station ids which is the route having minimum transfers from source to destination.
 			</desc>
 				<argument name="source" type="String">
 					<desc>The staion id of source</desc>
