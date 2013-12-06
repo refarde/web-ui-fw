@@ -41,7 +41,7 @@
 	</options>
 	<events>
 		<event name="create">
-			<desc>Triggered when a widget is created.
+			<desc>Triggered when a routemap is created
 			</desc>
 			<argument name="event" type="Event">
 				<desc></desc>
@@ -51,7 +51,7 @@
 			</argument>
 		</event>
 		<event name="select">
-			<desc>Triggered when a station or line is selected.
+			<desc>Triggered when station or line are selected
 			</desc>
 			<argument name="event" type="Event">
 				<desc></desc>
@@ -63,21 +63,21 @@
 	</events>
 	<methods>
 		<method name="getIdsByName">
-			<desc>Gets an array of station or line ids associated with the specified station or line name.
+			<desc>Gets an array of station/line ids associated with the specified station name or line name.
 			</desc>
 				<argument name="name" type="String">
-					<desc>The name of station or line</desc>
+					<desc>The name of station or line.</desc>
 				</argument>
 		</method>
 		<method name="getNameById">
 			<desc>Gets a string of station or line name with associated the specified station or line id.
 			</desc>
-				<argument name="code" type="String">
+				<argument name="id" type="String">
 					<desc>The id of station or line</desc>
 				</argument>
 		</method>
 		<method name="shortestRoute">
-			<desc>Returns an array of station ids which is the shortest route from source to destination.
+			<desc>Returns an array of station id which is the shortest route from source to destination.
 			</desc>
 				<argument name="source" type="String">
 					<desc>a station id of source</desc>
@@ -85,18 +85,6 @@
 				<argument name="destination" type="String">
 					<desc>a station id of destination</desc>
 				</argument>
-<pre><code>
-var widget = $( "#routemapTest" ),
-	startId = widget.routemap( "getIdsByName", "21" )[0],
-	endId = widget.routemap( "getIdsByName", "7(ex)" )[0],
-	path;
-
-widget.on( "vclick", function () {
-	path = widget.routemap( "shortestRoute", startId, endId );
-	widget.routemap( "highlight", path );
-});
-</code></pre>
-
 		</method>
 		<method name="minimumTransfers">
 			<desc>Returns an array of station ids which is the route having minimum transfers from source to destination.
@@ -109,7 +97,7 @@ widget.on( "vclick", function () {
 				</argument>
 		</method>
 		<method name="highlight">
-			<desc>Adds a highlighting style to stations.
+			<desc>Add highlight styles to station or line.
 			</desc>
 				<argument name="stations" type="Array">
 					<desc>The array of staion id</desc>
@@ -121,6 +109,7 @@ widget.on( "vclick", function () {
 				<argument name="stations" type="Array">
 					<desc>The array of staion id</desc>
 				</argument>
+			<p>if there are no arguments, all of highlighting style will be removed</p>
 		</method>
 		<method name="refresh" example-params="options">
 			<desc>Resizes&amp;redraws the widget, after having made some external modifications.
@@ -139,12 +128,14 @@ widget.on( "vclick", function () {
 		<script>
 			var DB_DATA = {
 				"name": "Example Route Map",
+
 				"exchangeStyle": {
 					"backgroundColor": "white",
 					"borderColor": "gray",
 					"width" : 12,
 					"height" : 12
 				},
+
 				"lines": [{
 					"id": "line1",
 					"name": "Line 1",
@@ -158,14 +149,34 @@ widget.on( "vclick", function () {
 					},
 					"branches": [
 						[
-							{ "id": "1", "coordinates": [ 1, 2 ], "label": "1", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "2", "coordinates": [ 2, 2 ], "label": "2(ex)", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "3", "coordinates": [ 3, 2 ], "label": "3", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "4", "coordinates": [ 4, 2 ], "label": "4(ex)", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "5", "coordinates": [ 5, 3 ], "label": "5(ex)", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "6", "coordinates": [ 6, 3 ], "label": "6", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "7", "coordinates": [ 7, 3 ], "label": "7(ex)", "labelPosition": "ne", "labelAngle": 45 },
-							{ "id": "8", "coordinates": [ 8, 4 ], "label": "8(ex)", "labelPosition": "ne", "labelAngle": 45 }
+							{ "id": "11", "coordinates": [ 2, 1 ], "label": "ST1", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "12", "coordinates": [ 2, 2 ], "label": "ST2", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "13", "coordinates": [ 2, 3 ], "label": "ST3", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "14", "coordinates": [ 3, 5 ], "label": "ST4", "labelPosition": "e", "labelAngle": 0 }
+						], [
+							{ "id": "15", "coordinates": [ 2, 3 ], "label": "ST3", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "16", "coordinates": [ 1, 4 ], "label": "ST6", "labelPosition": "e", "labelAngle": 0 }
+						]
+					]
+				}, {
+					"id": "line2",
+					"name": "Line 2",
+					"style": {
+						"line" : { "stroke": "red" },
+						"station": {
+							"borderColor": "red",
+							"width" : 8,
+							"height" : 8
+						}
+					},
+					"branches": [
+						[
+							{ "id": "21", "coordinates": [ 1, 2 ], "label": "ST7", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "22", "coordinates": [ 2, 2 ], "label": "ST2", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "23", "coordinates": [ 3, 2 ], "label": "ST9", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "24", "coordinates": [ 3, 3 ], "label": "ST10", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "25", "coordinates": [ 3, 4 ], "label": "ST11", "labelPosition": "ne", "labelAngle": 45 },
+							{ "id": "26", "coordinates": [ 3, 5 ], "label": "ST4", "labelPosition": "ne", "labelAngle": 45 }
 						]
 					]
 				}]
