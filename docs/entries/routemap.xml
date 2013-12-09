@@ -6,7 +6,7 @@
 	<longdesc>
 		<h3>Route Map</h3>
 		<p>Routemap is a jquery mobile plugin to render a route data.</p>
-		<p>Routemap draws the lines between above two stations automatically, and it indicates a shortest or minimum transfer route between two stations that user selected</p>
+		<p>Routemap draws the lines between above two stations automatically, and it indicates a shortest or minimum transfer route between two stations that a user selected</p>
 		<p>Routemap supports JSON for DB ( routemap data ), so it's possible to set DB by setting a file path or a variable on widget, and it allows us to modify each style of stations, routes, and labels easily</p>
 		<p>And also, it supports a multi-language.</p>
 
@@ -21,7 +21,7 @@
 	<options>
 		<option name="db" default="null" example-value="&quot;data.json&quot;">
 			<desc>
-				<p>The URL of a JSON file or a javascript variable to load.</p>
+				<p>The URL of a JSON file or JavaScript variable to load</p>
 			</desc>
 			<type name="String" />
 		</option>
@@ -31,10 +31,9 @@
 			</desc>
 			<type name="String" />
 		</option>
-		<option name="unit" default="1" example-value='10'>
+		<option name="unit" default="1" example-value='50'>
 			<desc>
-				<p>The length unit of the route map. If the value is 10 and a station coordinate is (1, 2) 
-					then the station will be displayed at (10, 20).</p>
+				<p>The length unit of the routemap. If the value is 50 and a station coordinate is (1, 2) then the station will be displayed at (50, 100).</p>
 			</desc>
 			<type name="Integer" />
 		</option>
@@ -51,13 +50,13 @@
 			</argument>
 		</event>
 		<event name="select">
-			<desc>Triggered when station or line are selected
+			<desc>Triggered when station and line are clicked or touched
 			</desc>
 			<argument name="event" type="Event">
 				<desc></desc>
 			</argument>
 			<argument name="id" type="String">
-				<desc>selected station or line id </desc>
+				<desc><p>selected station or line id. If selected outside of station and line, the id will return to undefined</p></desc>
 			</argument>
 		</event>
 	</events>
@@ -90,24 +89,24 @@
 			<desc>Returns an array of station ids which is the route having minimum transfers from source to destination.
 			</desc>
 				<argument name="source" type="String">
-					<desc>The staion id of source</desc>
+					<desc>The station id of source</desc>
 				</argument>
 				<argument name="destination" type="String">
-					<desc>The staion id of destination</desc>
+					<desc>The station id of destination</desc>
 				</argument>
 		</method>
 		<method name="highlight">
 			<desc>Add highlight styles to station or line.
 			</desc>
 				<argument name="stations" type="Array">
-					<desc>The array of staion id</desc>
+					<desc>The array of station id</desc>
 				</argument>
 		</method>
 		<method name="dishighlight">
 			<desc>Removes a highlighting style from stations.
 			</desc>
 				<argument name="stations" type="Array">
-					<desc>The array of staion id</desc>
+					<desc>The array of station id</desc>
 				</argument>
 			<p>if there are no arguments, all of highlighting style will be removed</p>
 		</method>
