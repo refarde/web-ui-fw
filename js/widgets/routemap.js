@@ -96,15 +96,13 @@ define( [
 				} else if ( typeof value === "object" ) {
 					data = value;
 				}
-
 				if ( data ) {
+					if ( self._svg.firstChild ) {
+						self._refreshData( data );
+					} else {
+						self._processData( data );
+					}
 					self._data = data;
-				}
-
-				if ( self._svg.firstChild ) {
-					self._refreshData( self._data );
-				} else {
-					self._processData( self._data );
 				}
 				break;
 
