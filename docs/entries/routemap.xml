@@ -6,7 +6,7 @@
 	<longdesc>
 		<h3>Route Map</h3>
 		<p>Routemap is a jquery mobile plugin to render a route data.</p>
-		<p>Routemap draws the lines between above two stations automatically, and it indicates a shortest or minimum transfer route between two stations that a user selected</p>
+		<p>Routemap draws the lines between more than two stations automatically, and it indicates a shortest or minimum transfer route between two stations that a user selected</p>
 		<p>Routemap supports JSON for DB ( routemap data ), so it's possible to set DB by setting a file path or a variable on widget, and it allows us to modify each style of stations, routes, and labels easily</p>
 		<p>And also, it supports a multi-language.</p>
 

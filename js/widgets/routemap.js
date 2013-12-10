@@ -79,9 +79,10 @@ define( [
 				option = self.options,
 				data;
 			$.Widget.prototype._setOption.apply( this, arguments );
+
 			switch ( key ) {
 			case "db":
-				if ( value.match( /\.(json)$/i ) ) {
+				if ( typeof value === "string" && value.match( /\.(json)$/i ) ) {
 					$.ajax( {
 						async: false,
 						global: false,
@@ -92,21 +93,24 @@ define( [
 					} ).fail( function ( e ) {
 						throw new Error( e );
 					} );
-				} else {
-					data = window[value];
+				} else if ( typeof value === "object" ) {
+					data = value;
 				}
-				self._processData( data );
-				self._data = data;
+
+				if ( data ) {
+					self._data = data;
+				}
+
+				if ( self._svg.firstChild ) {
+					self._refreshData( self._data );
+				} else {
+					self._processData( self._data );
+				}
 				break;
 
 			case "unit":
 				if ( self._svg.firstChild ) {
-					self._lines= [];
-					self._stations= [];
-					self._nameList= {};
-					self._graph= {};
-					self._processData( self._data );
-					self.refresh( true );
+					self._refreshData( self._data );
 				}
 				break;
 
@@ -135,6 +139,14 @@ define( [
 				} );
 				break;
 			}
+		},
+		_refreshData: function ( data ) {
+			this._lines= [];
+			this._stations= [];
+			this._nameList= {};
+			this._graph= {};
+			this._processData( data );
+			this.refresh( true );
 		},
 
 		_clear: function () {
