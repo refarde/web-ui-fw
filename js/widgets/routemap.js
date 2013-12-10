@@ -29,6 +29,7 @@ define( [
 		_stations: [],
 		_nameList: {},
 		_graph: {},
+		_data: {},
 
 		_create: function () {
 			var self = this,
@@ -50,7 +51,7 @@ define( [
 			$.each( this.options, function ( key, value ) {
 				self._setOption( key, value );
 			} );
-
+			
 			if ( document.readyState === "complete" ) {
 				self.refresh( true );
 			}
@@ -77,7 +78,6 @@ define( [
 			var self = this,
 				option = self.options,
 				data;
-
 			$.Widget.prototype._setOption.apply( this, arguments );
 			switch ( key ) {
 			case "db":
@@ -96,6 +96,18 @@ define( [
 					data = window[value];
 				}
 				self._processData( data );
+				self._data = data;
+				break;
+
+			case "unit":
+				if ( self._svg.firstChild ) {
+					self._lines= [];
+					self._stations= [];
+					self._nameList= {};
+					self._graph= {};
+					self._processData( self._data );
+					self.refresh( true );
+				}
 				break;
 
 			case "language":
@@ -121,7 +133,6 @@ define( [
 				} ).done( function ( result ) {
 					self._languageData = result;
 				} );
-
 				break;
 			}
 		},
@@ -130,7 +141,6 @@ define( [
 			while ( this._svg.firstChild ) {
 				this._svg.removeChild( this._svg.firstChild );
 			}
-
 			$( ".ui-station-container" ).empty();
 		},
 
