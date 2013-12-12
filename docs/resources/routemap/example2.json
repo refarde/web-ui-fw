@@ -1,0 +1,44 @@
+{
+	"name": "routemap example",
+	"exchangeStyle": {
+		"backgroundColor": "white",
+		"borderColor": "gray",
+		"width" : 12,
+		"height" : 12
+	},
+	"lines": [{
+		"id": "line1",
+		"name": "Line 1",
+		"style": {
+			"line" : { "stroke": "red" },
+
+			"station": {
+				"borderColor": "red"
+			}
+		},
+		"branches": [
+			[
+				{ "id": "11", "coordinates": [ 50, 100 ], "label": "ST1", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "10", "coordinates": [ 100, 100 ], "label": "ST(ex)", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "12", "coordinates": [ 150, 100 ], "label": "ST2", "labelPosition": "ne", "labelAngle": 45 }
+			]
+		]
+	}, {
+		"id": "line2",
+		"name": "Line 2",
+		"style": {
+			"line" : { "stroke": "blue" },
+
+			"station": {
+				"borderColor": "blue"
+			}
+		},
+		"branches": [
+			[
+				{ "id": "21", "coordinates": [ 100, 50 ], "label": "ST3", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "20", "coordinates": [ 100, 100 ], "label": "ST(ex)", "labelPosition": "ne", "labelAngle": 45 },
+				{ "id": "22", "coordinates": [ 100, 150 ], "label": "ST4", "labelPosition": "ne", "labelAngle": 45 }
+			]
+		]
+	}]
+}
