@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Routemap example5</title> 
+
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="../../../jqm/css/themes/default/jquery.mobile.css" />
+	<link rel="stylesheet" href="../../../css/themes/default/web-ui-fw.css" />
+	<link rel="stylesheet" href="../../../jqm/demos/_assets/css/jqm-demos.css">
+	<script src="../../../jqm/js/jquery.js"></script>
+	<script src="../../../jqm/js/"></script>
+	<script src="../../../js/"></script>
+	<style>
+		html, body { padding: 0; margin: 0; }
+		html, .ui-mobile, .ui-mobile body {
+			height: 85px;
+		}
+		.ui-mobile, .ui-mobile .ui-page {
+			min-height: 85px;
+		}
+		.ui-content{
+			padding:10px 15px 0px 15px;
+		}
+	</style>
+	<script>
+		$( document ).on( "routemapcreate", function ( event ) {
+			var widget = $( "#routemapTest" );
+			widget.on( "select", function( event , id ) {
+				widget.routemap("dishighlight");
+				widget.routemap( "highlight", [id] );
+			});
+		});
+	</script>
+</head>
+<body>
+	<div data-role="page" id="routemap" data-dom-cache="true">
+		<div data-role="header" data-position="fixed">
+			<h1>Routemap Demo header</h1>
+		</div>
+		<div data-role="content">
+			<div id="routemapTest" data-role="routemap" data-db="example4.json" data-unit="60">
+			</div>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<h4>Routemap Demo footer</h4>
+		</div>
+	</div>
+</body>
+</html>
