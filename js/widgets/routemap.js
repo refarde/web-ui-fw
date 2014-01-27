@@ -27,6 +27,7 @@ define( [
 		_languageData: null,
 		_lines: [],
 		_stations: [],
+		_stationsMap: [],
 		_nameList: {},
 		_graph: {},
 		_data: {},
@@ -167,8 +168,6 @@ define( [
 				exchangeStyle = data.exchangeStyle || {},
 				lineStyle,
 				coord,
-				occupations = {},
-				stationsMap = [],
 				minX = 9999,
 				minY = 9999,
 				maxX = 0,
@@ -216,10 +215,6 @@ define( [
 							graph[station.id][branch[k + 1].id] = 3;
 						}
 
-						if ( !stationsMap[coord[0]] ) {
-							stationsMap[coord[0]] = [];
-						}
-
 						// info
 						minX = ( minX > coord[0] ) ? coord[0] : minX;
 						minY = ( minY > coord[1] ) ? coord[1] : minY;
@@ -227,32 +222,24 @@ define( [
 						maxY = ( maxY < coord[1] ) ? coord[1] : maxY;
 
 						//stations
+						if ( !this._stationsMap[coord[0]] ) {
+							this._stationsMap[coord[0]] = [];
+						}
 						this._nameList[station.id] = station.label;
 
-						if ( !occupations[station.label] ) {
+						this._nameList[ station.id ] = station.label;
+						if ( !this._stationsMap[coord[0]][coord[1]] ) {
 							station.style = stationStyle;
 							station.transfer = [];
-							station.bridge = {};
-							occupations[station.label] = station;
-							stationsMap[coord[0]][coord[1]] = station;
+							this._stationsMap[coord[0]][coord[1]] = station;
 							this._stations.push( station );
-						} else if ( occupations[station.label].id !== station.id ) {
-							exchange = occupations[station.label];
+						} else {
+							exchange = this._stationsMap[coord[0]][coord[1]];
 
 							if ( !exchange.transfer.length ) {
 								exchange.style = exchangeStyle;
 							}
-
 							exchange.transfer.push( station.id );
-
-							if ( !stationsMap[coord[0]][coord[1]] ) {
-								station.style = exchangeStyle;
-								stationsMap[coord[0]][coord[1]] = station;
-								station.transfer = exchange.transfer;
-								station.bridge = exchange;
-								this._stations.push( station );
-							}
-
 							graph[station.id][exchange.id] = "TRANSPER";
 							graph[exchange.id][station.id] = "TRANSPER";
 						}
@@ -335,39 +322,37 @@ define( [
 		},
 
 		_drawElements: function () {
-			var i = 0,
+			var i,
 				options = this.options,
 				unit = options.unit,
+				stationRadius,
 				stations = this._stations,
-				stationsLength = stations.length,
+
+				station,
+				label,
+				coordinates,
+				position,
+				labelPosition = [0, 0],
+				labelAngle = 0,
+				stationName,
+				classes,
+				top, left, key,
+				$station,
+				$stationCircle,
+				$textSpan,
+				textSpanWidth,
+				textSpanHeight,
 				$stationContainer = this.element.find( ".ui-station-container" );
 
-				function draw() {
-					var key, top, left,
-						stationRadius,
-						stationName,
-						bridge,
-						$station,
-						$stationCircle,
-						$stationConnect,
-						$textSpan,
-						textSpanWidth,
-						textSpanHeight,
-						labelPosition = [0, 0],
-						labelAngle = 0,
-						station = stations[i],
-						label = station.label,
-						coordinates = station.coordinates,
-						position = [unit * coordinates[0], unit * coordinates[1]],
-						classes = "ui-station",
-						ctx, canvasTop, canvasLeft;
+				for ( i = 0; i < stations.length; i += 1 ) {
+					station = stations[i];
+					label = station.label;
+					coordinates = station.coordinates;
+					position = [unit * coordinates[0], unit * coordinates[1] ];
+					classes = "ui-station ui-id-" + station.id;
 
 					if ( station.transfer.length ) {
-						classes += " ui-id-" + ( station.bridge.id || station.id ) +
-							" ui-id-" + station.transfer.join( " ui-id-" ) +
-							" ui-exchange";
-					} else {
-						classes += " ui-id-" + station.id;
+						classes += " ui-id-" + station.transfer.join( " ui-id-" ) + " ui-exchange";
 					}
 
 					$station = $( "<div class='" + classes + "'></div>" ).appendTo( $stationContainer );
@@ -378,7 +363,6 @@ define( [
 							$stationCircle.css( key, station.style[key] );
 						}
 					}
-
 					stationRadius = $stationCircle.outerWidth() / 2;
 					top = position[1];
 					left = position[0];
@@ -387,52 +371,14 @@ define( [
 						"left" : left - stationRadius
 					} );
 
-					if ( station.bridge.id ) {
-						bridge = station.bridge;
-						canvasTop = ( ( bridge.coordinates[1] < coordinates[1] ) ? bridge.coordinates[1] : coordinates[1] ) * unit;
-						canvasLeft = ( ( bridge.coordinates[0] < coordinates[0] ) ? bridge.coordinates[0] : coordinates[0] ) * unit;
-						$stationConnect = $( "<canvas class='ui-bridge" +
-							" ui-bridge-" + station.id + "-" + bridge.id + "'>" )
-							.css( {
-								"top": canvasTop - stationRadius,
-								"left": canvasLeft - stationRadius
-							} )
-							.attr( {
-								"width": Math.abs( bridge.coordinates[0] - coordinates[0] ) * unit + $stationCircle.outerWidth(),
-								"height": Math.abs( bridge.coordinates[1] - coordinates[1] ) * unit + $stationCircle.outerWidth()
-							})
-							.appendTo( $station );
+				labelAngle = station.labelAngle ? -parseInt( station.labelAngle, 10 ) : 0;
+				stationName = this._languageData ? ( this._languageData[label] || label ) : label;
+				$textSpan = $( "<span class='ui-label'>"+ stationName +"</span>" ).appendTo( $station );
+				textSpanWidth = $textSpan.outerWidth( true );
+				textSpanHeight = $textSpan.outerHeight( true );
+				top -= textSpanHeight / 2;
 
-						ctx = $stationConnect[0].getContext( "2d" );
-						ctx.beginPath();
-						ctx.lineCap = "butt";
-						ctx.lineWidth = $stationCircle.outerWidth();
-						ctx.strokeStyle = $stationCircle.css( "borderColor" );
-						ctx.moveTo( bridge.coordinates[0] * unit + stationRadius - canvasLeft,
-							bridge.coordinates[1] * unit + stationRadius - canvasTop );
-						ctx.lineTo( coordinates[0] * unit + stationRadius - canvasLeft,
-							coordinates[1] * unit + stationRadius - canvasTop );
-						ctx.stroke();
-
-						ctx.beginPath();
-						ctx.lineCap = "round";
-						ctx.lineWidth = $stationCircle.innerWidth();
-						ctx.strokeStyle = $stationCircle.css( "backgroundColor" );
-						ctx.moveTo( bridge.coordinates[0] * unit + stationRadius - canvasLeft,
-							bridge.coordinates[1] * unit + stationRadius - canvasTop );
-						ctx.lineTo( coordinates[0] * unit + stationRadius - canvasLeft,
-							coordinates[1] * unit + stationRadius - canvasTop );
-						ctx.stroke();
-					}
-
-					labelAngle = station.labelAngle ? -parseInt( station.labelAngle, 10 ) : 0;
-					stationName = this._languageData ? ( this._languageData[label] || label ) : label;
-					$textSpan = $( "<span class='ui-label'>"+ stationName +"</span>" ).appendTo( $station );
-					textSpanWidth = $textSpan.outerWidth( true );
-					textSpanHeight = $textSpan.outerHeight( true );
-					top -= textSpanHeight / 2;
-
-					switch ( station.labelPosition || "s" ) {
+				switch ( station.labelPosition || "s" ) {
 					case "w" :
 						labelPosition = [ left - stationRadius * 3 / 2 - textSpanWidth, top ];
 						break;
@@ -456,22 +402,15 @@ define( [
 						break;
 					case "n" :
 						labelPosition = [ left - textSpanWidth / 2, top - textSpanHeight ];
-						break;
-					}
-
-					$textSpan.css( {
-						"top" : labelPosition[1],
-						"left" : labelPosition[0],
-						"transform-origin" : ( labelAngle > 0 ) ? "100% 50%" : "0% 50%",
-						"transform" : "rotate( " + labelAngle + "deg )"
-					} );
-
-					if ( ++i < stationsLength ) {
-						setTimeout( draw, 1 );
-					}
+					break;
 				}
 
-			draw();
+				$textSpan.css( {
+					"top" : labelPosition[1],
+					"left" : labelPosition[0],
+					"transform" : "rotate( " + labelAngle + "deg )"
+				} );
+			}
 		},
 
 		// -------------------------------------------------
